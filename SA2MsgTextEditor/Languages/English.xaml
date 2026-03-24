@@ -1,0 +1,105 @@
+﻿<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <system:String x:Key="MainWindow.Title">SA2 Message Text Editor</system:String>
+
+    <!-- Menu -->
+    <system:String x:Key="Menu.File">_File</system:String>
+    <system:String x:Key="Menu.Settings">_Settings</system:String>
+    <system:String x:Key="Menu.Language">_Language</system:String>
+
+    <system:String x:Key="Menu.File.Open">Open...</system:String>
+    <system:String x:Key="Menu.File.Save">Save</system:String>
+    <system:String x:Key="Menu.File.SaveAs">Save As...</system:String>
+    <system:String x:Key="Menu.File.ImportJson">Import JSON...</system:String>
+    <system:String x:Key="Menu.File.ExportJson">Export JSON...</system:String>
+    <system:String x:Key="Menu.File.Exit">Exit</system:String>
+
+    <system:String x:Key="Menu.Settings.Codepage">Codepage</system:String>
+    <system:String x:Key="Codepage.Latin">Latin (Windows-1252)</system:String>
+    <system:String x:Key="Codepage.Cyrillic">Cyrillic (Windows-1251)</system:String>
+    <system:String x:Key="Codepage.Japanese">Japanese (Shift-JIS)</system:String>
+    <system:String x:Key="Menu.Codepage.Custom">Custom...</system:String>
+    <system:String x:Key="Menu.Settings.Endianness">Endianness</system:String>
+    <system:String x:Key="Menu.Endianness.Auto">Auto</system:String>
+    <system:String x:Key="Menu.Endianness.BigEndian">Big Endian</system:String>
+    <system:String x:Key="Menu.Endianness.LittleEndian">Little Endian</system:String>
+
+    <system:String x:Key="Language.English">English</system:String>
+    <system:String x:Key="Language.Russian">Русский (Russian)</system:String>
+    <system:String x:Key="Language.Japanese">日本語 (Japanese)</system:String>
+
+    <!-- File filters -->
+    <system:String x:Key="Filters.PRS">
+		Supported files|eh*.prs;mh*.prs;ex_mission?.prs;mission?.prs;msg*.prs;text_?.prs;mcwarn_?.prs;msgalkinderfoname_?.prs
+		|Treasure hunting hint files|eh*.prs
+		|Gameplay message files|mh*.prs
+		|Other message files|ex_mission?.prs;mission?.prs;msg*.prs;text_?.prs;mcwarn_?.prs"
+		|Chao names file|msgalkinderfoname_?.prs
+		|All PRS files|*.prs
+	</system:String>
+    <system:String x:Key="Filters.JSON">JSON files|*.json</system:String>
+
+    <!-- Custom codepage input -->
+    <system:String x:Key="EnterCustomCodepage.Title">Codepage</system:String>
+    <system:String x:Key="EnterCustomCodepage.Text">Enter custom codepage</system:String>
+    <system:String x:Key="EnterCustomCodepage.OK">OK</system:String>
+    <system:String x:Key="EnterCustomCodepage.Cancel">Cancel</system:String>
+
+    <!-- Status bar -->
+    <system:String x:Key="Status.FileType.HuntingHints">Treasure hunting hints</system:String>
+    <system:String x:Key="Status.FileType.GameplayMessages">Omochao hints / gameplay messages</system:String>
+    <system:String x:Key="Status.FileType.SimpleText">Simple text array</system:String>
+    <system:String x:Key="Status.FileType.ChaoNames">Chao names</system:String>
+    <system:String x:Key="Status.SelectedGroup">Selected group</system:String>
+    <system:String x:Key="Status.SelectedItem">Selected item</system:String>
+    <system:String x:Key="Status.SelectedItem.None">Selected item: none</system:String>
+    <system:String x:Key="Status.TotalItems">Total items</system:String>
+    <system:String x:Key="Status.Endianness.Auto">Auto</system:String>
+    <system:String x:Key="Status.Endianness.BigEndian">Big Endian</system:String>
+    <system:String x:Key="Status.Endianness.LittleEndian">Little Endian</system:String>    
+    <system:String x:Key="Status.CustomCodepage">Custom codepage</system:String>
+    
+    <!-- List box -->
+    <system:String x:Key="ListBox.EmptyString">{Empty}</system:String>
+
+    <!-- Messages list -->
+    <system:String x:Key="SA2Message.Voice">Voice</system:String>
+    <system:String x:Key="SA2Message.FrameCount">Time</system:String>
+    <system:String x:Key="SA2Message.Is2P">2P</system:String>
+    <system:String x:Key="SA2Message.TextCentering">Centering</system:String>
+    <system:String x:Key="SA2Message.Text">Text</system:String>
+    <system:String x:Key="SA2Message.ChaoNames">Chao names</system:String>
+
+    <system:String x:Key="SA2Message.Voice.Description">Voice ID</system:String>
+    <system:String x:Key="SA2Message.FrameCount.Description">Display duration (frame count)</system:String>
+    <system:String x:Key="SA2Message.Is2P.Description">A flag related to treasure hunting 2P mode</system:String>
+    <system:String x:Key="SA2Message.TextCentering.Description">Text centering method</system:String>
+    <system:String x:Key="SA2Message.Text.Description">Subtitle text</system:String>
+    <system:String x:Key="SA2Message.ChaoNames.Description">Chao names (up to 7 characters)</system:String>
+
+    <!-- Text centering options-->
+    <system:String x:Key="TextCentering.None">None</system:String>
+    <system:String x:Key="TextCentering.Block">Block</system:String>
+    <system:String x:Key="TextCentering.All">All</system:String>
+
+    <system:String x:Key="TextCentering.None.Description">None, left alignment</system:String>
+    <system:String x:Key="TextCentering.Block.Description">Text block: centered, text inside: left-aligned</system:String>
+    <system:String x:Key="TextCentering.All.Description">All text centered</system:String>
+
+    <!-- Buttons -->
+    <system:String x:Key="Button.Add">Add</system:String>
+    <system:String x:Key="Button.InsertAfter">Insert after</system:String>
+    <system:String x:Key="Button.RemoveLast">Remove last</system:String>
+    <system:String x:Key="Button.RemoveSelected">Remove selected</system:String>
+
+    <!-- Message boxes -->
+    <system:String x:Key="Message.FileOpenOnClosing" xml:space="preserve">You have a file opened.&#x0a;Any unsaved changes will be lost.&#x0a;&#x0a;Exit?</system:String>
+    <system:String x:Key="Message.FileOpenOnOpeningNewFile" xml:space="preserve">You have a file opened.&#x0a;Any unsaved changes will be lost.&#x0a;&#x0a;Open new file?</system:String>
+    <system:String x:Key="Message.WrongEndianness" xml:space="preserve">It appears the endianness setting doesn't match this file.&#x0a;&#x0a;Try changing the endianness setting.</system:String>
+    <system:String x:Key="Message.AutoEndiannessSaveAs" xml:space="preserve">Unable to save PRS file from imported JSON&#x0a;with automatic endianness setting.&#x0a;&#x0a;Please select Big Endian or Little Endian.</system:String>
+    <system:String x:Key="Message.UnsupportedCodepage" xml:space="preserve">The entered codepage is not supported.</system:String>
+    <system:String x:Key="Message.InvalidJson" xml:space="preserve">The imported JSON doesn't contain SA2 message text data.</system:String>
+</ResourceDictionary>

@@ -1,0 +1,183 @@
+﻿<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <!-- #region UI -->
+    <system:String x:Key="MainWindow.Title">SA2 Event Text Editor</system:String>    
+
+    <!-- Menu -->
+    <system:String x:Key="Menu.File">_File</system:String>
+    <system:String x:Key="Menu.Settings">_Settings</system:String>
+    <system:String x:Key="Menu.Language">_Language</system:String>
+    
+    <system:String x:Key="Menu.File.Open">Open...</system:String>
+    <system:String x:Key="Menu.File.Save">Save</system:String>
+    <system:String x:Key="Menu.File.SaveAs">Save As...</system:String>
+    <system:String x:Key="Menu.File.ImportJson">Import JSON...</system:String>
+    <system:String x:Key="Menu.File.ExportJson">Export JSON...</system:String>
+    <system:String x:Key="Menu.File.Exit">Exit</system:String>
+    
+    <system:String x:Key="Menu.Settings.Codepage">Codepage</system:String>
+    <system:String x:Key="Codepage.Latin">Latin (Windows-1252)</system:String>
+    <system:String x:Key="Codepage.Cyrillic">Cyrillic (Windows-1251)</system:String>
+    <system:String x:Key="Codepage.Japanese">Japanese (Shift-JIS)</system:String>
+    <system:String x:Key="Menu.Codepage.Custom">Custom...</system:String>
+    <system:String x:Key="Menu.Settings.Endianness">Endianness</system:String>
+    <system:String x:Key="Menu.Endianness.Auto">Auto</system:String>
+    <system:String x:Key="Menu.Endianness.BigEndian">Big Endian</system:String>
+    <system:String x:Key="Menu.Endianness.LittleEndian">Little Endian</system:String>
+
+    <system:String x:Key="Language.English">English</system:String>
+    <system:String x:Key="Language.Russian">Русский (Russian)</system:String>
+    <system:String x:Key="Language.Japanese">日本語 (Japanese)</system:String>
+    
+    <!-- File filters -->
+    <system:String x:Key="Filters.PRS">SA2 event text files|evmes*.prs</system:String>
+    <system:String x:Key="Filters.JSON">JSON files|*.json</system:String>
+
+    <!-- Custom codepage input -->
+    <system:String x:Key="EnterCustomCodepage.Title">Codepage</system:String>
+    <system:String x:Key="EnterCustomCodepage.Text">Enter custom codepage</system:String>
+    <system:String x:Key="EnterCustomCodepage.OK">OK</system:String>
+    <system:String x:Key="EnterCustomCodepage.Cancel">Cancel</system:String>
+
+    <!-- Status bar -->
+    <system:String x:Key="Status.FileMode.PRS">Game file (PRS)</system:String>
+    <system:String x:Key="Status.FileMode.JSON">Import JSON</system:String>
+    <system:String x:Key="Status.EventID">Event ID</system:String>
+    <system:String x:Key="Status.SelectedItem">Selected item</system:String>
+    <system:String x:Key="Status.SelectedItem.None">Selected item: none</system:String>
+    <system:String x:Key="Status.TotalItems">Total items</system:String>
+    <system:String x:Key="Status.Endianness.Auto">Auto</system:String>
+    <system:String x:Key="Status.Endianness.BigEndian">Big Endian</system:String>
+    <system:String x:Key="Status.Endianness.LittleEndian">Little Endian</system:String>    
+    <system:String x:Key="Status.CustomCodepage">Custom codepage</system:String>
+
+    <!-- Messages list -->
+    <system:String x:Key="Character">Character</system:String>
+    <system:String x:Key="TextCentering">Centering</system:String>
+    <system:String x:Key="Text">Text</system:String>
+    
+    <system:String x:Key="Character.Description">Character (doesn't actually matter)</system:String>
+    <system:String x:Key="TextCentering.Description">Text centering method</system:String>
+    <system:String x:Key="Text.Description">Subtitle text</system:String>
+
+    <!-- Text centering options-->
+    <system:String x:Key="TextCentering.None">None</system:String>
+    <system:String x:Key="TextCentering.Block">Block</system:String>
+    <system:String x:Key="TextCentering.All">All</system:String>
+    
+    <system:String x:Key="TextCentering.None.Description">None, left alignment</system:String>
+    <system:String x:Key="TextCentering.Block.Description">Text block: centered, text inside: left-aligned</system:String>
+    <system:String x:Key="TextCentering.All.Description">All text centered</system:String>
+
+    <!-- Buttons -->
+    <system:String x:Key="Button.Add">Add</system:String>
+    <system:String x:Key="Button.InsertAfter">Insert after</system:String>
+    <system:String x:Key="Button.RemoveLast">Remove last</system:String>
+    <system:String x:Key="Button.RemoveSelected">Remove selected</system:String>    
+
+    <!-- Message boxes -->
+    <system:String x:Key="Message.FileOpenOnClosing" xml:space="preserve">You have a file opened.&#x0a;Any unsaved changes will be lost.&#x0a;&#x0a;Exit?</system:String>
+    <system:String x:Key="Message.FileOpenOnOpeningNewFile" xml:space="preserve">You have a file opened.&#x0a;Any unsaved changes will be lost.&#x0a;&#x0a;Open new file?</system:String>
+    <system:String x:Key="Message.WrongEndianness" xml:space="preserve">It appears the endianness setting doesn't match this file.&#x0a;&#x0a;Try changing the endianness setting.</system:String>
+    <system:String x:Key="Message.AutoEndiannessSaveAs" xml:space="preserve">Unable to save PRS file from imported JSON&#x0a;with automatic endianness setting.&#x0a;&#x0a;Please select Big Endian or Little Endian.</system:String>
+    <system:String x:Key="Message.UnsupportedCodepage" xml:space="preserve">The entered codepage is not supported.</system:String>
+    <system:String x:Key="Message.InvalidJson" xml:space="preserve">The imported JSON doesn't contain SA2 event data.</system:String>
+    <!-- #endregion -->
+
+    <!-- #region Event names -->
+    <!-- Hero story -->
+    <system:String x:Key="EV0000">EV0000: Hero story intro</system:String>
+    <system:String x:Key="EV0001">EV0001: Big Foot prelude</system:String>
+    <system:String x:Key="EV0002">EV0002: Sonic encounters Shadow</system:String>
+    <system:String x:Key="EV0003">EV0003: Knuckles meets Rouge</system:String>
+    <system:String x:Key="EV0004">EV0004: Tails flies to Prison Island</system:String>
+    <system:String x:Key="EV0005">EV0005: Tails vs Eggman 1 aftermath</system:String>
+    <system:String x:Key="EV0006">EV0006: Sonic escapes from his cell</system:String>
+    <system:String x:Key="EV0007">EV0007: Sonic vs Shadow 1 prelude (Hero)</system:String>
+    <system:String x:Key="EV0008">EV0008: Sonic vs Shadow 1 aftermath (Hero)</system:String>
+    <system:String x:Key="EV0009">EV0009: Prison Island explodes</system:String>
+    <system:String x:Key="EV0010">EV0010: Pumpkin Hill</system:String>
+    <system:String x:Key="EV0011">EV0011: Team Sonic witnesses the ARK's power</system:String>
+    <system:String x:Key="EV0012">EV0012: Tails finds out about the ARK [deleted scene]</system:String>
+    <system:String x:Key="EV0013">EV0013: Aquatic Mine</system:String>
+    <system:String x:Key="EV0014">EV0014: Where's Eggman?</system:String>
+    <system:String x:Key="EV0015">EV0015: Eggman threatens the President</system:String>
+    <system:String x:Key="EV0016">EV0016: Locating Eggman's pyramid base</system:String>
+    <system:String x:Key="EV0017">EV0017: Knuckles searches for the gate keys</system:String>
+    <system:String x:Key="EV0018">EV0018: King Boom Boo prelude</system:String>
+    <system:String x:Key="EV0019">EV0019: Eggman's hidden base ambush</system:String>
+    <system:String x:Key="EV0020">EV0020: Team Sonic goes to space</system:String>
+    <system:String x:Key="EV0021">EV0021: Team Sonic arrives on the ARK</system:String>
+    <system:String x:Key="EV0022">EV0022: Sonic receives a ransom call from Eggman</system:String>
+    <system:String x:Key="EV0023">EV0023: Knuckles vs Rouge prelude (Hero)</system:String>
+    <system:String x:Key="EV0024">EV0024: Knuckles vs Rouge aftermath (Hero)</system:String>
+    <system:String x:Key="EV0025">EV0025: Sonic and Eggman face off</system:String>
+    <system:String x:Key="EV0026">EV0026: Sonic's last chance</system:String>
+    <system:String x:Key="EV0027">EV0027: Sonic vs Shadow 2 prelude (Hero)</system:String>
+    <system:String x:Key="EV0028">EV0028: Hero story ending</system:String>
+    <system:String x:Key="EV0029">EV0029: Dark story trailer</system:String>
+    <system:String x:Key="EV0030">EV0030: Last story trailer</system:String>
+    <system:String x:Key="EV0050">EV0050: Pumpkin Hill timestamp</system:String>
+    <system:String x:Key="EV0051">EV0051: Eggman's announcement timestamp (Hero)</system:String>
+    <system:String x:Key="EV0052">EV0052: Aquatic Mine timestamp</system:String>
+    <system:String x:Key="EV0053">EV0053: Meteor Herd timestamp</system:String>
+    <system:String x:Key="EV0054">EV0054: Crazy Gadget timestamp</system:String>
+
+    <!-- Dark story -->
+    <system:String x:Key="EV0100">EV0100: Dark story intro</system:String>
+    <system:String x:Key="EV0101">EV0101: Eggman awakens Shadow</system:String>
+    <system:String x:Key="EV0102">EV0102: Shadow instructs Eggman</system:String>
+    <system:String x:Key="EV0103">EV0103: Rouge meets Knuckles</system:String>
+    <system:String x:Key="EV0104">EV0104: Sand Ocean</system:String>
+    <system:String x:Key="EV0105">EV0105: Eggman watches Shadow's robbery</system:String>
+    <system:String x:Key="EV0106">EV0106: Shadow's pathos</system:String>
+    <system:String x:Key="EV0107">EV0107: Shadow encounters Sonic</system:String>
+    <system:String x:Key="EV0108">EV0108: Egg Quarters</system:String>
+    <system:String x:Key="EV0109">EV0109: Rouge follows Eggman</system:String>
+    <system:String x:Key="EV0110">EV0110: Lost Colony</system:String>
+    <system:String x:Key="EV0111">EV0111: Gathering of the Dark</system:String>
+    <system:String x:Key="EV0112">EV0112: Team Dark arrives on Prison Island</system:String>
+    <system:String x:Key="EV0113">EV0113: Tails and Amy complicate Eggman's plan</system:String>
+    <system:String x:Key="EV0114">EV0114: Security Hall</system:String>
+    <system:String x:Key="EV0115">EV0115: Flying Dog prelude</system:String>
+    <system:String x:Key="EV0116">EV0116: Shadow's conscience begins to surface</system:String>
+    <system:String x:Key="EV0117">EV0117: Sonic vs Shadow 1 prelude (Dark)</system:String>
+    <system:String x:Key="EV0118">EV0118: Sonic vs Shadow 1 aftermath (Dark)</system:String>
+    <system:String x:Key="EV0119">EV0119: Shadow remembers Maria</system:String>
+    <system:String x:Key="EV0120">EV0120: Eggman reworks his plan</system:String>
+    <system:String x:Key="EV0121">EV0121: Sky Rail</system:String>
+    <system:String x:Key="EV0122">EV0122: Shadow spots the Tornado</system:String>
+    <system:String x:Key="EV0123">EV0123: Eggman's hidden base ambush fails</system:String>
+    <system:String x:Key="EV0124">EV0124: Rouge learns the truth about Project Shadow</system:String>
+    <system:String x:Key="EV0125">EV0125: Knuckles vs Rouge prelude (Dark)</system:String>
+    <system:String x:Key="EV0126">EV0126: Knuckles vs Rouge aftermath (Dark)</system:String>
+    <system:String x:Key="EV0127">EV0127: Eggman's final plan to crush the heroes</system:String>
+    <system:String x:Key="EV0128">EV0128: Eggman sets a diabolical trap for Sonic</system:String>
+    <system:String x:Key="EV0129">EV0129: Mystery of Shadow The Hedgehog</system:String>
+    <system:String x:Key="EV0130">EV0130: Sonic vs Shadow 2 prelude (Dark)</system:String>
+    <system:String x:Key="EV0131">EV0131: Dark story ending</system:String>
+    <system:String x:Key="EV0132">EV0132: Hero story trailer</system:String>
+    <system:String x:Key="EV0150">EV0150: Sand Ocean timestamp</system:String>
+    <system:String x:Key="EV0151">EV0151: Egg Quarters timestamp</system:String>
+    <system:String x:Key="EV0152">EV0152: Lost Colony timestamp</system:String>
+    <system:String x:Key="EV0153">EV0153: Eggman's announcement timestamp (Dark)</system:String>
+    <system:String x:Key="EV0154">EV0154: Route 280 timestamp</system:String>
+
+    <!-- Last story -->
+    <system:String x:Key="EV0200">EV0200: Last episode intro</system:String>
+    <system:String x:Key="EV0201">EV0201: The ARK falls</system:String>
+    <system:String x:Key="EV0202">EV0202: Gerald's revenge</system:String>
+    <system:String x:Key="EV0203">EV0203: Gerald's diary and madness</system:String>
+    <system:String x:Key="EV0204">EV0204: Amy reasons with Shadow</system:String>
+    <system:String x:Key="EV0205">EV0205: Sonic and Knuckles approach the core</system:String>
+    <system:String x:Key="EV0206">EV0206: Knuckles stops the Chaos Emeralds</system:String>
+    <system:String x:Key="EV0207">EV0207: Sonic and Shadow transform</system:String>
+    <system:String x:Key="EV0208">EV0208: Shadow gives his life to save the world</system:String>
+    <system:String x:Key="EV0209">EV0209: The President's dream to be a hero [deleted scene]</system:String>
+    <system:String x:Key="EV0210">EV0210: Last episode ending/credits</system:String>
+    <system:String x:Key="EV0211">EV0211: Epilogue</system:String>
+    <!-- #endregion -->
+</ResourceDictionary>

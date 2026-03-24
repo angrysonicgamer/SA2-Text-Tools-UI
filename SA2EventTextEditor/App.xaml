@@ -1,0 +1,16 @@
+﻿<Application x:Class="SA2EventTextEditor.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:SA2EventTextEditor"
+             StartupUri="UI/MainWindow.xaml">
+    
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Languages/English.xaml" />
+                <!-- ResourceDictionary Source="Languages/Russian.xaml" /-->
+                <!-- ResourceDictionary Source="Languages/Japanese.xaml" /-->
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>        
+    </Application.Resources>
+</Application>

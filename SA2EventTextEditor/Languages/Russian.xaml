@@ -1,0 +1,183 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+	<!-- #region UI -->
+    <system:String x:Key="MainWindow.Title">Редактор текста катсцен SA2</system:String>    
+    
+    <!-- Menu -->
+	<system:String x:Key="Menu.File">_Файл</system:String>
+    <system:String x:Key="Menu.Settings">_Настройки</system:String>
+    <system:String x:Key="Menu.Language">_Язык</system:String>
+    
+	<system:String x:Key="Menu.File.Open">Открыть...</system:String>
+	<system:String x:Key="Menu.File.Save">Сохранить</system:String>
+	<system:String x:Key="Menu.File.SaveAs">Сохранить как...</system:String>
+	<system:String x:Key="Menu.File.ImportJson">Импортировать JSON...</system:String>
+	<system:String x:Key="Menu.File.ExportJson">Экспортировать JSON...</system:String>
+	<system:String x:Key="Menu.File.Exit">Выход</system:String>
+	
+	<system:String x:Key="Menu.Settings.Codepage">Кодировка</system:String>
+	<system:String x:Key="Codepage.Latin">Латиница (Windows-1252)</system:String>
+	<system:String x:Key="Codepage.Cyrillic">Кириллица (Windows-1251)</system:String>
+	<system:String x:Key="Codepage.Japanese">Японская (Shift-JIS)</system:String>
+	<system:String x:Key="Menu.Codepage.Custom">Свой выбор...</system:String>
+	<system:String x:Key="Menu.Settings.Endianness">Порядок байтов</system:String>
+    <system:String x:Key="Menu.Endianness.Auto">Авто</system:String>
+	<system:String x:Key="Menu.Endianness.BigEndian">Прямой (Big Endian)</system:String>
+	<system:String x:Key="Menu.Endianness.LittleEndian">Обратный (Little Endian)</system:String>
+
+    <system:String x:Key="Language.English">English (Английский)</system:String>
+    <system:String x:Key="Language.Russian">Русский</system:String>
+    <system:String x:Key="Language.Japanese">日本語 (Японский)</system:String>
+
+    <!-- File filters -->
+    <system:String x:Key="Filters.PRS">Файлы текста катсцен SA2|evmes*.prs</system:String>
+    <system:String x:Key="Filters.JSON">Файлы JSON|*.json</system:String>
+
+    <!-- Custom codepage input -->
+    <system:String x:Key="EnterCustomCodepage.Title">Кодировка</system:String>
+    <system:String x:Key="EnterCustomCodepage.Text">Введите номер кодировки</system:String>
+    <system:String x:Key="EnterCustomCodepage.OK">OK</system:String>
+    <system:String x:Key="EnterCustomCodepage.Cancel">Отмена</system:String>
+
+    <!-- Status bar -->
+    <system:String x:Key="Status.FileMode.PRS">Игровой файл (PRS)</system:String>
+    <system:String x:Key="Status.FileMode.JSON">Импорт JSON</system:String>
+    <system:String x:Key="Status.EventID">ID сцены</system:String>
+    <system:String x:Key="Status.SelectedItem">Выбранный элемент</system:String>
+    <system:String x:Key="Status.SelectedItem.None">Выбранный элемент: нет</system:String>
+    <system:String x:Key="Status.TotalItems">Всего элементов</system:String>
+    <system:String x:Key="Status.Endianness.Auto">Авто</system:String>
+    <system:String x:Key="Status.Endianness.BigEndian">Big Endian</system:String>
+    <system:String x:Key="Status.Endianness.LittleEndian">Little Endian</system:String>
+    <system:String x:Key="Status.CustomCodepage">Своя кодировка</system:String>
+
+    <!-- Messages list -->
+	<system:String x:Key="Character">Персонаж</system:String>
+	<system:String x:Key="TextCentering">Центровка</system:String>
+	<system:String x:Key="Text">Текст</system:String>
+    
+    <system:String x:Key="Character.Description">Персонаж (не имеет значения)</system:String>
+    <system:String x:Key="TextCentering.Description">Метод центрирования текста</system:String>
+    <system:String x:Key="Text.Description">Текст субтитров</system:String>
+
+    <!-- Text centering options-->
+    <system:String x:Key="TextCentering.None">Нет</system:String>
+    <system:String x:Key="TextCentering.Block">Блок</system:String>
+    <system:String x:Key="TextCentering.All">Всё</system:String>
+    
+    <system:String x:Key="TextCentering.None.Description">Без центрирования, выравнивание по левому краю</system:String>
+    <system:String x:Key="TextCentering.Block.Description">Текстовый блок: по центру, текст внутри: по левому краю</system:String>
+    <system:String x:Key="TextCentering.All.Description">Весь текст по центру</system:String>
+
+    <!-- Buttons -->
+	<system:String x:Key="Button.Add">Добавить</system:String>
+	<system:String x:Key="Button.InsertAfter">Вставить после</system:String>
+	<system:String x:Key="Button.RemoveLast">Удалить последний</system:String>
+	<system:String x:Key="Button.RemoveSelected">Удалить выбранный</system:String>
+
+    <!-- Message boxes -->
+    <system:String x:Key="Message.FileOpenOnClosing" xml:space="preserve">Открыт файл в приложении.&#x0a;Все несохранённые изменения будут утеряны.&#x0a;&#x0a;Выйти?</system:String>
+    <system:String x:Key="Message.FileOpenOnOpeningNewFile" xml:space="preserve">Открыт файл в приложении.&#x0a;Все несохранённые изменения будут утеряны.&#x0a;&#x0a;Открыть новый файл?</system:String>
+    <system:String x:Key="Message.WrongEndianness" xml:space="preserve">Похоже, выбранный вариант порядка байтов&#x0a;не соответствует открытому файлу.&#x0a;&#x0a;Попробуйте изменить настройку порядка байтов.</system:String>
+    <system:String x:Key="Message.AutoEndiannessSaveAs" xml:space="preserve">Невозможно сохранить PRS-файл&#x0a;из импортированного JSON-файла&#x0a;с автоопределением порядка байтов.&#x0a;&#x0a;Пожалуйста, выберите Big Endian или Little Endian.</system:String>
+    <system:String x:Key="Message.UnsupportedCodepage" xml:space="preserve">Введённая кодовая страница не поддерживается.</system:String>
+    <system:String x:Key="Message.InvalidJson" xml:space="preserve">Импортированный JSON-файл не содержит&#x0a;данных о катсценах SA2.</system:String>
+    <!-- #endregion -->
+
+    <!-- #region Event names -->
+    <!-- Hero story -->
+    <system:String x:Key="EV0000">EV0000: Начало истории героев</system:String>
+    <system:String x:Key="EV0001">EV0001: Перед боем с Big Foot</system:String>
+    <system:String x:Key="EV0002">EV0002: Соник наткнулся на Шедоу</system:String>
+    <system:String x:Key="EV0003">EV0003: Наклз встречает Руж</system:String>
+    <system:String x:Key="EV0004">EV0004: Тейлз летит к Тюремному острову</system:String>
+    <system:String x:Key="EV0005">EV0005: После сражения Тейлза и Эггмана</system:String>
+    <system:String x:Key="EV0006">EV0006: Побег Соника из его клетки</system:String>
+    <system:String x:Key="EV0007">EV0007: Перед первым боем Соника и Шедоу (герои)</system:String>
+    <system:String x:Key="EV0008">EV0008: После первого боя Соника и Шедоу (герои)</system:String>
+    <system:String x:Key="EV0009">EV0009: Тюремный остров взрывается</system:String>
+    <system:String x:Key="EV0010">EV0010: Тыквенные горы (Pumpkin Hill)</system:String>
+    <system:String x:Key="EV0011">EV0011: Соник и друзья видят мощь ARK</system:String>
+    <system:String x:Key="EV0012">EV0012: Тейлз узнаёт про ARK [вырезанная сцена]</system:String>
+    <system:String x:Key="EV0013">EV0013: Подводная шахта (Aquatic Mine)</system:String>
+    <system:String x:Key="EV0014">EV0014: Где же Эггман?</system:String>
+    <system:String x:Key="EV0015">EV0015: Соник и Тейлз перехватывают видео Эггмана</system:String>
+    <system:String x:Key="EV0016">EV0016: Расположение базы Эггмана в пирамиде</system:String>
+    <system:String x:Key="EV0017">EV0017: Наклз отправляется на поиски ключей от ворот</system:String>
+    <system:String x:Key="EV0018">EV0018: Перед боем с Кинг Бум Бу</system:String>
+    <system:String x:Key="EV0019">EV0019: Соник попал в ловушку Эггмана в пирамиде</system:String>
+    <system:String x:Key="EV0020">EV0020: Соник с друзьями летят в космос</system:String>
+    <system:String x:Key="EV0021">EV0021: Тейлз объясняет план по уничтожению пушки затмения</system:String>
+    <system:String x:Key="EV0022">EV0022: Эггман оглашает Сонику требования выкупа</system:String>
+    <system:String x:Key="EV0023">EV0023: Перед боем Наклза и Руж (герои)</system:String>
+    <system:String x:Key="EV0024">EV0024: После боя Наклза и Руж (герои)</system:String>
+    <system:String x:Key="EV0025">EV0025: Соник напротив Эггмана</system:String>
+    <system:String x:Key="EV0026">EV0026: Соник спасается</system:String>
+    <system:String x:Key="EV0027">EV0027: Последняя битва Соника и Шедоу</system:String>
+    <system:String x:Key="EV0028">EV0028: Конец истории героев</system:String>
+    <system:String x:Key="EV0029">EV0029: Трейлер истории злодеев</system:String>
+    <system:String x:Key="EV0030">EV0030: Трейлер финальной истории</system:String>
+    <system:String x:Key="EV0050">EV0050: Pumpkin Hill (временная отметка)</system:String>
+    <system:String x:Key="EV0051">EV0051: Обращение Эггмана (временная отметка) (герои)</system:String>
+    <system:String x:Key="EV0052">EV0052: Aquatic Mine (временная отметка)</system:String>
+    <system:String x:Key="EV0053">EV0053: Meteor Herd (временная отметка)</system:String>
+    <system:String x:Key="EV0054">EV0054: Crazy Gadget (временная отметка)</system:String>
+
+    <!-- Dark story -->
+    <system:String x:Key="EV0100">EV0100: Начало истории злодеев</system:String>
+    <system:String x:Key="EV0101">EV0101: Эггман пробуждает Шедоу</system:String>
+    <system:String x:Key="EV0102">EV0102: Шедоу даёт инструкции Эггману</system:String>
+    <system:String x:Key="EV0103">EV0103: Руж встречает Наклза</system:String>
+    <system:String x:Key="EV0104">EV0104: Песчаное море (Sand Ocean)</system:String>
+    <system:String x:Key="EV0105">EV0105: Эггман узнаёт об ограблении Шедоу</system:String>
+    <system:String x:Key="EV0106">EV0106: Пафос Шедоу</system:String>
+    <system:String x:Key="EV0107">EV0107: Шедоу натыкается на Соника</system:String>
+    <system:String x:Key="EV0108">EV0108: Эгг-штаб (Egg Quarters)</system:String>
+    <system:String x:Key="EV0109">EV0109: Руж следует за Эггманом</system:String>
+    <system:String x:Key="EV0110">EV0110: Заброшенная колония (Lost Colony)</system:String>
+    <system:String x:Key="EV0111">EV0111: Злодеи собираются вместе</system:String>
+    <system:String x:Key="EV0112">EV0112: Прибытие на Тюремный остров</system:String>
+    <system:String x:Key="EV0113">EV0113: План Эггмана усложняют Тейлз с Эми</system:String>
+    <system:String x:Key="EV0114">EV0114: Охраняемая зона (Security Hall)</system:String>
+    <system:String x:Key="EV0115">EV0115: Перед боем с Flying Dog</system:String>
+    <system:String x:Key="EV0116">EV0116: Начала проявляться совесть Шедоу</system:String>
+    <system:String x:Key="EV0117">EV0117: Перед первым боем Соника и Шедоу (злодеи)</system:String>
+    <system:String x:Key="EV0118">EV0118: После первого боя Соника и Шедоу (злодеи)</system:String>
+    <system:String x:Key="EV0119">EV0119: Жизнь Шедоу и Марии в прошлом</system:String>
+    <system:String x:Key="EV0120">EV0120: Эггман перерабатывает свой план</system:String>
+    <system:String x:Key="EV0121">EV0121: Небесный путь (Sky Rail)</system:String>
+    <system:String x:Key="EV0122">EV0122: Шедоу замечает Торнадо</system:String>
+    <system:String x:Key="EV0123">EV0123: Провал засады Эггмана внутри пирамиды</system:String>
+    <system:String x:Key="EV0124">EV0124: Руж узнаёт правду о проекте "Шедоу"</system:String>
+    <system:String x:Key="EV0125">EV0125: Перед боем Наклза и Руж (злодеи)</system:String>
+    <system:String x:Key="EV0126">EV0126: После боя Наклза и Руж (злодеи)</system:String>
+    <system:String x:Key="EV0127">EV0127: Последний план Эггмана по сокрушению героев</system:String>
+    <system:String x:Key="EV0128">EV0128: Эггман устраивает ужасающую ловушку для Соника</system:String>
+    <system:String x:Key="EV0129">EV0129: Тайна ежа Шедоу</system:String>
+    <system:String x:Key="EV0130">EV0130: Последняя битва Шедоу и Соника</system:String>
+    <system:String x:Key="EV0131">EV0131: Конец истории злодеев</system:String>
+    <system:String x:Key="EV0132">EV0132: Трейлер истории героев</system:String>
+    <system:String x:Key="EV0150">EV0150: Sand Ocean (временная отметка)</system:String>
+    <system:String x:Key="EV0151">EV0151: Egg Quarters (временная отметка)</system:String>
+    <system:String x:Key="EV0152">EV0152: Lost Colony (временная отметка)</system:String>
+    <system:String x:Key="EV0153">EV0153: Обращение Эггмана (временная отметка) (злодеи)</system:String>
+    <system:String x:Key="EV0154">EV0154: Route 280 (временная отметка)</system:String>
+
+    <!-- Last story -->
+    <system:String x:Key="EV0200">EV0200: Начало финальной истории</system:String>
+    <system:String x:Key="EV0201">EV0201: ARK падает</system:String>
+    <system:String x:Key="EV0202">EV0202: Месть Джеральда</system:String>
+    <system:String x:Key="EV0203">EV0203: Дневник Джеральда и его безумие</system:String>
+    <system:String x:Key="EV0204">EV0204: Шедоу и Эми</system:String>
+    <system:String x:Key="EV0205">EV0205: Последний козырь Джеральда</system:String>
+    <system:String x:Key="EV0206">EV0206: Наклз останавливает Изумруды Хаоса</system:String>
+    <system:String x:Key="EV0207">EV0207: Трансформация Соника и Шедоу</system:String>
+    <system:String x:Key="EV0208">EV0208: Шедоу отдаёт жизнь ради спасения мира</system:String>
+    <system:String x:Key="EV0209">EV0209: Мечта президента стать героем [вырезанная сцена]</system:String>
+    <system:String x:Key="EV0210">EV0210: Конец финальной истории/титры</system:String>
+    <system:String x:Key="EV0211">EV0211: Эпилог</system:String>
+    <!-- #endregion -->
+</ResourceDictionary>
