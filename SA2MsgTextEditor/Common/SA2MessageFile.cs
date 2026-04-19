@@ -102,7 +102,7 @@ namespace SA2MsgTextEditor.Common
         {
             var rawStrings = new List<string>();
 
-            if (Type == MessageFileType.GameplayMessages || Type == MessageFileType.HuntingHints)
+            if (Type == MessageFileType.GameplayMessages)
             {
                 foreach (var group in Messages)
                 {
@@ -115,6 +115,16 @@ namespace SA2MsgTextEditor.Common
 
                     string text = builder.ToString();
                     rawStrings.Add(text);
+                }
+            }
+            else if (Type == MessageFileType.HuntingHints)
+            {
+                foreach (var group in Messages)
+                {
+                    foreach (var message in group)
+                    {
+                        rawStrings.Add(message.GetRawText(encoding));
+                    }
                 }
             }
             else if (Type == MessageFileType.SimpleTextArray)
