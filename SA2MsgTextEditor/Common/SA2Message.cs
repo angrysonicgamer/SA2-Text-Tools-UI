@@ -61,7 +61,7 @@ namespace SA2MsgTextEditor.Common
 
         public void Parse(string rawText, Encoding encoding)
         {
-            rawText = rawText.ReplaceKeyboardButtons(encoding);
+            rawText = rawText.ReplaceKeyboardButtons(encoding).ReplaceUrlSignature(encoding);
 
             if (rawText.StartsWith('\x0C'))
             {
@@ -112,7 +112,7 @@ namespace SA2MsgTextEditor.Common
             }
 
             builder.Append(Text);
-            return builder.ToString().ReplaceKeyboardButtons(encoding, TextConversionMode.Reversed);
+            return builder.ToString().ReplaceKeyboardButtons(encoding, TextConversionMode.Reversed).ReplaceUrlSignature(encoding, TextConversionMode.Reversed);
         }
 
         public string GetRawChaoText(Encoding encoding)

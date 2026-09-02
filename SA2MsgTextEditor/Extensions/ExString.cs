@@ -5,14 +5,14 @@ namespace SA2MsgTextEditor.Extensions
 {
     public static class ExString
     {
-        private static readonly Dictionary<string, string> buttonsMap = new()
+        private static readonly Dictionary<string, string> _buttonsMap = new()
         {
             { "±", "{A}" },
             { "¶", "{B}" },
             { "Ё", "{Y}" },
         };
 
-        private static readonly Dictionary<string, string> cyrillicButtonsMap = new()
+        private static readonly Dictionary<string, string> _cyrillicButtonsMap = new()
         {
             { "±", "{A}" },
             { "¶", "{B}" },
@@ -37,12 +37,23 @@ namespace SA2MsgTextEditor.Extensions
         {
             if (encoding.CodePage == (int)Codepage.Windows1251)
             {
-                return Replace(text, cyrillicButtonsMap, mode);
+                return Replace(text, _cyrillicButtonsMap, mode);
             }
             else
             {
-                return Replace(text, buttonsMap, mode);
+                return Replace(text, _buttonsMap, mode);
             }
+        }
+
+        public static string ReplaceUrlSignature(this string text, Encoding encoding, TextConversionMode mode = TextConversionMode.Default)
+        {
+            Dictionary<string, string> urlTags = new()
+            {
+                { encoding.GetString([0x0E, 0xFF, 0x11]), "<url>" },
+                { encoding.GetString([0xFF, 0x10, 0x0F]), "</url>" }
+            };
+
+            return Replace(text, urlTags, mode);
         }
     }
 }
