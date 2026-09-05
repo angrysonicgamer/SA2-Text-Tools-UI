@@ -34,12 +34,14 @@
         <CommandBinding x:Name="CommandSave" Command="Save" Executed="CommandSave_Executed" />
         <CommandBinding x:Name="CommandSaveAs" Command="SaveAs" Executed="CommandSaveAs_Executed" />
         <CommandBinding x:Name="CommandClose" Command="Close" Executed="CommandClose_Executed" />
+        <CommandBinding x:Name="CommandSearch" Command="Search" Executed="CommandSearch_Executed" />
     </Window.CommandBindings>
 
     <Window.InputBindings>
         <KeyBinding Gesture="Ctrl+O" Command="Open" />
         <KeyBinding Gesture="Ctrl+S" Command="Save" />
         <KeyBinding Gesture="Ctrl+Shift+S" Command="SaveAs" />
+        <KeyBinding Gesture="Ctrl+F" Command="Search" />
     </Window.InputBindings>
 
     <Grid>
@@ -62,6 +64,11 @@
                 <Separator />
                 <MenuItem x:Name="MenuExit" Header="{DynamicResource Menu.File.Exit}" InputGestureText="Alt+F4" Command="Close" />
             </MenuItem>
+
+            <MenuItem x:Name="MenuSearch" Header="{DynamicResource Menu.Search}">
+                <MenuItem x:Name="MenuFind" Header="{DynamicResource Menu.Search.Find}" InputGestureText="Ctrl+F" Command="Search" />
+            </MenuItem>
+
             <MenuItem Header="{DynamicResource Menu.Settings}">
                 <MenuItem Header="{DynamicResource Menu.Settings.Codepage}">
                     <MenuItem x:Name="Codepage1252" Header="{DynamicResource Codepage.Latin}" IsCheckable="True" Click="Codepage1252_Click" />
@@ -75,6 +82,7 @@
                     <MenuItem x:Name="LittleEndian" Header="{DynamicResource Menu.Endianness.LittleEndian}" IsCheckable="True" Click="LittleEndian_Click" />
                 </MenuItem>                
             </MenuItem>
+                
             <MenuItem Header="{DynamicResource Menu.Language}">
                 <MenuItem x:Name="MenuEnglish" Header="{DynamicResource Language.English}" IsCheckable="True" Click="MenuEnglish_Click" />
                 <MenuItem x:Name="MenuRussian" Header="{DynamicResource Language.Russian}" IsCheckable="True" Click="MenuRussian_Click" />
@@ -165,6 +173,18 @@
                             </Style.Triggers>
                         </Style>
                     </DataGrid.RowStyle>
+
+                    <DataGrid.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="DodgerBlue" />
+                                    <Setter Property="BorderBrush" Value="SteelBlue" />
+                                    <Setter Property="Foreground" Value="White" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.CellStyle>
 
                     <DataGrid.Columns>
                         <!-- Voice -->

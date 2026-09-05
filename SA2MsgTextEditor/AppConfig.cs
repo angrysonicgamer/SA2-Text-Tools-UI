@@ -5,14 +5,34 @@ using System.Text.Json.Serialization;
 
 namespace SA2MsgTextEditor
 {
-    public class AppConfig
+    public class Settings
     {
-        private readonly string configFile = "AppConfig.json";
-
         public Codepage Encoding { get; set; }
         public int? CustomCodepage { get; set; }
         public Endianness Endianness { get; set; }
         public Language Language { get; set; }
+
+
+        [JsonConstructor]
+        public Settings() { }
+    }
+
+    public class Search
+    {
+        public bool IgnoreCase { get; set; }
+
+
+        [JsonConstructor]
+        public Search() { }
+    }
+
+    public class AppConfig
+    {
+        private readonly string _configFile = "AppConfig.json";
+
+        public Settings Settings { get; set; }
+        public Search Search { get; set; }
+
 
         [JsonConstructor]
         public AppConfig() { }
@@ -20,37 +40,42 @@ namespace SA2MsgTextEditor
 
         public void Read()
         {
-            if (File.Exists(configFile))
+            Settings = new();
+            Search = new();
+
+            if (File.Exists(_configFile))
             {
-                var buffer = Json.Import<AppConfig>(configFile);
-                Encoding = buffer.Encoding;
-                CustomCodepage = buffer.CustomCodepage;
-                Endianness = buffer.Endianness;
-                Language = buffer.Language;
+                var buffer = Json.Import<AppConfig>(_configFile);
+                Settings.Encoding = buffer.Settings.Encoding;
+                Settings.CustomCodepage = buffer.Settings.CustomCodepage;
+                Settings.Endianness = buffer.Settings.Endianness;
+                Settings.Language = buffer.Settings.Language;
+                Search.IgnoreCase = buffer.Search.IgnoreCase;
             }
             else
             {
-                Encoding = Codepage.Windows1252;
-                Endianness = Endianness.BigEndian;
-                Language = Language.English;
+                Settings.Encoding = Codepage.Windows1252;
+                Settings.Endianness = Endianness.BigEndian;
+                Settings.Language = Language.English;
+                Search.IgnoreCase = false;
             }
         }
 
         public void SetEncoding(Codepage encoding)
         {
-            Encoding = encoding;
-            CustomCodepage = null;
+            Settings.Encoding = encoding;
+            Settings.CustomCodepage = null;
         }
 
         public void SetEncoding(int customCodepage)
         {
-            Encoding = Codepage.Custom;
-            CustomCodepage = customCodepage;
+            Settings.Encoding = Codepage.Custom;
+            Settings.CustomCodepage = customCodepage;
         }
 
         public void Save()
         {
-            Json.Export(this, configFile);
+            Json.Export(this, _configFile);
         }
     }
 }

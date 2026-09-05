@@ -10,6 +10,8 @@ namespace SA2MsgTextEditor
     public partial class App : Application
     {
         public static AppConfig Config = new AppConfig();
+        public static SA2MessageFile? SA2Msg { get; set; }
+        public static string? LastSearchText { get; set; }
 
         public static string GetString(string key)
         {
@@ -35,14 +37,14 @@ namespace SA2MsgTextEditor
                 Current.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri($"Languages/{language}.xaml", UriKind.Relative) });
             }
 
-            Config.Language = language;
+            Config.Settings.Language = language;
         }
 
         protected override void OnStartup(StartupEventArgs e)
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             Config.Read();
-            SetLanguage(Config.Language);
+            SetLanguage(Config.Settings.Language);
             base.OnStartup(e);
         }
     }

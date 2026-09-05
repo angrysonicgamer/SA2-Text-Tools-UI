@@ -7,6 +7,7 @@
 
     <!-- Menu -->
     <system:String x:Key="Menu.File">ファイル(_F)</system:String>
+    <system:String x:Key="Menu.Search">検索(_S)</system:String>
     <system:String x:Key="Menu.Settings">設定(_S)</system:String>
     <system:String x:Key="Menu.Language">言語(_L)</system:String>
 
@@ -16,6 +17,8 @@
     <system:String x:Key="Menu.File.ImportJson">JSONをインポート...</system:String>
     <system:String x:Key="Menu.File.ExportJson">JSONをエクスポート...</system:String>
     <system:String x:Key="Menu.File.Exit">終了</system:String>
+
+    <system:String x:Key="Menu.Search.Find">検索...</system:String>
 
     <system:String x:Key="Menu.Settings.Codepage">コードページ</system:String>
     <system:String x:Key="Codepage.Latin">ラテン文字 (Windows-1252)</system:String>
@@ -47,6 +50,13 @@
     <system:String x:Key="EnterCustomCodepage.Text">カスタムコードページを入力してください</system:String>
     <system:String x:Key="EnterCustomCodepage.OK">OK</system:String>
     <system:String x:Key="EnterCustomCodepage.Cancel">キャンセル</system:String>
+
+    <!-- Search window -->
+    <system:String x:Key="Search.Title">検索</system:String>
+    <system:String x:Key="Search.FindWhat">検索文字列:</system:String>
+    <system:String x:Key="Search.Results">検索リザルト</system:String>
+    <system:String x:Key="Search.ResultsCount">リザルト数:</system:String>
+    <system:String x:Key="Search.IgnoreCase">大／小文字を区別しない</system:String>
 
     <!-- Status bar -->
     <system:String x:Key="Status.FileType.HuntingHints">宝探しヒント</system:String>
@@ -94,6 +104,8 @@
     <system:String x:Key="Button.InsertAfter">後に挿入</system:String>
     <system:String x:Key="Button.RemoveLast">最後を削除</system:String>
     <system:String x:Key="Button.RemoveSelected">選択されたアイテムを削除</system:String>
+    <system:String x:Key="Button.Find">検索</system:String>
+    <system:String x:Key="Button.Close">閉じる</system:String>
 
     <!-- Message boxes -->
     <system:String x:Key="Message.FileOpenOnClosing" xml:space="preserve">開いているファイルがあります。&#x0a;保存されていない変更は失われます。&#x0a;&#x0a;終了しますか？</system:String>
@@ -102,4 +114,5 @@
     <system:String x:Key="Message.AutoEndiannessSaveAs" xml:space="preserve">オートエンディアンでインポートされたJSONファイルから&#x0a;PRSファイルを保存できません。&#x0a;&#x0a;Big endianかLittle endianが設定してください。</system:String>
     <system:String x:Key="Message.UnsupportedCodepage" xml:space="preserve">入力されたコードページはサポートされていません。</system:String>
     <system:String x:Key="Message.InvalidJson" xml:space="preserve">インポートされたJSONファイルに&#x0a;ゲームのメッセージデータがありません。</system:String>
+    <system:String x:Key="Message.NothingFound" xml:space="preserve">検索リザルトなし。</system:String>
 </ResourceDictionary>

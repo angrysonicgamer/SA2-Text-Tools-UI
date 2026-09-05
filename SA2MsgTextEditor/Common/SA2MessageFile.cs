@@ -144,5 +144,26 @@ namespace SA2MsgTextEditor.Common
             
             return rawStrings;
         }
+
+        public List<SearchResult> Search(string text, bool ignoreCase)
+        {
+            var searchResults = new List<SearchResult>();
+            StringComparison comparison = ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+
+            for (int i = 0; i < Messages.Count; i++)
+            {
+                for (int j = 0; j < Messages[i].Count; j++)
+                {
+                    var message = Messages[i][j];
+
+                    if (message.Text != null && message.Text.Contains(text, comparison))
+                    {
+                        searchResults.Add(new SearchResult(i, j, message.Text));
+                    }
+                }
+            }
+
+            return searchResults;
+        }
     }
 }

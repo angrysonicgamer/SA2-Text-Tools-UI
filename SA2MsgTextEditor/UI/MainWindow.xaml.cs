@@ -19,7 +19,6 @@ namespace SA2MsgTextEditor.UI
     {
         private string? _fileName;
         private bool _fileLoaded = false;
-        private SA2MessageFile? _sa2msg;
         private ObservableCollection<SA2Message>? _selectedGroup;
         private int _selectedGroupIndex = -1;
         private Encoding _selectedEncoding;
@@ -29,8 +28,8 @@ namespace SA2MsgTextEditor.UI
         public MainWindow()
         {
             InitializeComponent();            
-            _selectedEncoding = App.Config.CustomCodepage.HasValue ? Encoding.GetEncoding(App.Config.CustomCodepage.Value) : Encoding.GetEncoding((int)App.Config.Encoding);
-            _selectedEndianness = App.Config.Endianness;
+            _selectedEncoding = App.Config.Settings.CustomCodepage.HasValue ? Encoding.GetEncoding(App.Config.Settings.CustomCodepage.Value) : Encoding.GetEncoding((int)App.Config.Settings.Encoding);
+            _selectedEndianness = App.Config.Settings.Endianness;
         }
 
         private void WindowTextEditor_Loaded(object sender, RoutedEventArgs e)
@@ -61,7 +60,7 @@ namespace SA2MsgTextEditor.UI
 
         private void SetupMenusInitial()
         {
-            switch (App.Config.Encoding)
+            switch (App.Config.Settings.Encoding)
             {
                 case Codepage.Windows1252:
                     Codepage1252.IsChecked = true;
@@ -77,7 +76,7 @@ namespace SA2MsgTextEditor.UI
                     break;
             }
 
-            switch (App.Config.Endianness)
+            switch (App.Config.Settings.Endianness)
             {
                 case Endianness.Auto:
                     AutoEndian.IsChecked = true;
@@ -90,7 +89,7 @@ namespace SA2MsgTextEditor.UI
                     break;
             }
 
-            switch (App.Config.Language)
+            switch (App.Config.Settings.Language)
             {
                 case Common.Language.English:
                     MenuEnglish.IsChecked = true;
@@ -113,6 +112,7 @@ namespace SA2MsgTextEditor.UI
             MenuSave.IsEnabled = false;
             MenuSaveAs.IsEnabled = false;
             MenuExportJson.IsEnabled = false;
+            MenuSearch.IsEnabled = false;
             AutoEndian.IsEnabled = true;
             MessagesList.Visibility = Visibility.Hidden;
             ListGroupedMessages.Visibility = Visibility.Hidden;
@@ -130,8 +130,9 @@ namespace SA2MsgTextEditor.UI
             MenuSave.IsEnabled = _mode == OpenFileMode.OpenPRS;
             MenuSaveAs.IsEnabled = true;
             MenuExportJson.IsEnabled = true;
+            MenuSearch.IsEnabled = true;
             AutoEndian.IsEnabled = false;
-            ListGroupedMessages.ItemsSource = _sa2msg?.Messages;            
+            ListGroupedMessages.ItemsSource = App.SA2Msg?.Messages;            
 
             if (type == MessageFileType.GameplayMessages)
             {
@@ -221,10 +222,10 @@ namespace SA2MsgTextEditor.UI
             if (openFileWindow.ShowDialog() == false) return;
 
             _fileName = openFileWindow.FileName;
-            _sa2msg = new SA2MessageFile(_fileName);
-            var detectedEndianness = _sa2msg.DetectEndianness();
+            App.SA2Msg = new SA2MessageFile(_fileName);
+            var detectedEndianness = App.SA2Msg.DetectEndianness();
 
-            if (App.Config.Endianness != Endianness.Auto)
+            if (App.Config.Settings.Endianness != Endianness.Auto)
             {
                 if (detectedEndianness != _selectedEndianness)
                 {
@@ -240,19 +241,19 @@ namespace SA2MsgTextEditor.UI
             }
 
             _mode = OpenFileMode.OpenPRS;
-            _sa2msg.ReadMessages(_selectedEncoding, _selectedEndianness);            
-            SetupViewOnFileLoading(_sa2msg.Type);
+            App.SA2Msg.ReadMessages(_selectedEncoding, _selectedEndianness);            
+            SetupViewOnFileLoading(App.SA2Msg.Type);
             UpdateStatusBar();
         }
 
         private void CommandSave_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            _sa2msg?.Save(_fileName, _selectedEncoding, _selectedEndianness);
+            App.SA2Msg?.Save(_fileName, _selectedEncoding, _selectedEndianness);
         }
 
         private void CommandSaveAs_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            if (_mode == OpenFileMode.ImportJSON && App.Config.Endianness == Endianness.Auto)
+            if (_mode == OpenFileMode.ImportJSON && App.Config.Settings.Endianness == Endianness.Auto)
             {
                 MessageBox.Show(App.GetString("Message.AutoEndiannessSaveAs"), App.GetString("MainWindow.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
@@ -277,12 +278,12 @@ namespace SA2MsgTextEditor.UI
             if (openFileWindow.ShowDialog() == false) return;
 
             _fileName = openFileWindow.FileName;
-            _sa2msg = Json.Import<SA2MessageFile>(_fileName);            
+            App.SA2Msg = Json.Import<SA2MessageFile>(_fileName);            
 
-            if (_sa2msg?.Messages != null)
+            if (App.SA2Msg?.Messages != null)
             {
                 _mode = OpenFileMode.ImportJSON;
-                SetupViewOnFileLoading(_sa2msg.Type);
+                SetupViewOnFileLoading(App.SA2Msg.Type);
             }
             else
             {
@@ -297,7 +298,7 @@ namespace SA2MsgTextEditor.UI
             if (saveFileDialog.ShowDialog() == false) return;
 
             _fileName = saveFileDialog.FileName;
-            Json.Export(_sa2msg, _fileName);
+            Json.Export(App.SA2Msg, _fileName);
         }
 
         private void CommandClose_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -307,6 +308,17 @@ namespace SA2MsgTextEditor.UI
 
         #endregion
 
+        #region Menu > Search
+
+        private void CommandSearch_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (App.SA2Msg == null) return;
+
+            var searchWindow = new SearchWindow() { Text = App.LastSearchText };
+            searchWindow.Show();
+        }
+
+        #endregion
 
         #region Menu > Settings
 
@@ -320,17 +332,17 @@ namespace SA2MsgTextEditor.UI
 
         private void UpdateViewOnCodepageChange()
         {
-            if (_sa2msg?.Type == MessageFileType.GameplayMessages || _sa2msg?.Type == MessageFileType.HuntingHints)
+            if (App.SA2Msg?.Type == MessageFileType.GameplayMessages || App.SA2Msg?.Type == MessageFileType.HuntingHints)
             {
                 ListGroupedMessages.ItemsSource = null;
-                ListGroupedMessages.ItemsSource = _sa2msg?.Messages;
+                ListGroupedMessages.ItemsSource = App.SA2Msg?.Messages;
             }
         }
 
         private void Codepage1251_Click(object sender, RoutedEventArgs e)
         {
             var newEncoding = Encoding.GetEncoding((int)Codepage.Windows1251);
-            _sa2msg?.Reencode(_selectedEncoding, newEncoding);
+            App.SA2Msg?.Reencode(_selectedEncoding, newEncoding);
             _selectedEncoding = newEncoding;            
             CheckCodepageMenuItem(Codepage1251);
             UpdateViewOnCodepageChange();
@@ -342,7 +354,7 @@ namespace SA2MsgTextEditor.UI
         private void Codepage1252_Click(object sender, RoutedEventArgs e)
         {
             var newEncoding = Encoding.GetEncoding((int)Codepage.Windows1252);
-            _sa2msg?.Reencode(_selectedEncoding, newEncoding);
+            App.SA2Msg?.Reencode(_selectedEncoding, newEncoding);
             _selectedEncoding = newEncoding;
             CheckCodepageMenuItem(Codepage1252);
             UpdateViewOnCodepageChange();
@@ -354,7 +366,7 @@ namespace SA2MsgTextEditor.UI
         private void CodepageSJIS_Click(object sender, RoutedEventArgs e)
         {
             var newEncoding = Encoding.GetEncoding((int)Codepage.ShiftJIS);
-            _sa2msg?.Reencode(_selectedEncoding, newEncoding);
+            App.SA2Msg?.Reencode(_selectedEncoding, newEncoding);
             _selectedEncoding = newEncoding;
             CheckCodepageMenuItem(CodepageSJIS);
             UpdateViewOnCodepageChange();
@@ -384,7 +396,7 @@ namespace SA2MsgTextEditor.UI
                     return;
                 }
 
-                _sa2msg?.Reencode(_selectedEncoding, newEncoding);
+                App.SA2Msg?.Reencode(_selectedEncoding, newEncoding);
                 _selectedEncoding = newEncoding;
 
                 if (customCodepage == (int)Codepage.Windows1252)
@@ -423,7 +435,7 @@ namespace SA2MsgTextEditor.UI
             AutoEndian.IsChecked = true;
             BigEndian.IsChecked = false;
             LittleEndian.IsChecked = false;
-            App.Config.Endianness = Endianness.Auto;
+            App.Config.Settings.Endianness = Endianness.Auto;
             App.Config.Save();
             UpdateStatusBar();
         }
@@ -433,7 +445,7 @@ namespace SA2MsgTextEditor.UI
             BigEndian.IsChecked = true;
             LittleEndian.IsChecked = false;
             AutoEndian.IsChecked = false;
-            _selectedEndianness = App.Config.Endianness = Endianness.BigEndian;
+            _selectedEndianness = App.Config.Settings.Endianness = Endianness.BigEndian;
             App.Config.Save();
             UpdateStatusBar();
         }
@@ -443,7 +455,7 @@ namespace SA2MsgTextEditor.UI
             LittleEndian.IsChecked = true;
             BigEndian.IsChecked = false;
             AutoEndian.IsChecked = false;
-            _selectedEndianness = App.Config.Endianness = Endianness.LittleEndian;
+            _selectedEndianness = App.Config.Settings.Endianness = Endianness.LittleEndian;
             App.Config.Save();
             UpdateStatusBar();
         }
@@ -491,7 +503,7 @@ namespace SA2MsgTextEditor.UI
         private void UpdateViewOnLanguageChange()
         {
             ListGroupedMessages.ItemsSource = null;
-            ListGroupedMessages.ItemsSource = _sa2msg?.Messages;
+            ListGroupedMessages.ItemsSource = App.SA2Msg?.Messages;
             MessagesList.ItemsSource = null;
             MessagesList.ItemsSource = _selectedGroup;
         }
@@ -527,6 +539,16 @@ namespace SA2MsgTextEditor.UI
         {
             ButtonInsertAfter.IsEnabled = MessagesList.SelectedIndex != -1;
             ButtonRemoveSelected.IsEnabled = MessagesList.SelectedIndex != -1;
+
+            if (sender is DataGrid dataGrid && dataGrid.SelectedItem != null)
+            {
+                dataGrid.Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    dataGrid.UpdateLayout();
+                    dataGrid.ScrollIntoView(dataGrid.SelectedItem);
+                }));
+            }
+
             UpdateStatusBar();
         }
 
@@ -580,9 +602,9 @@ namespace SA2MsgTextEditor.UI
 
         private void UpdateStatusBar()
         {
-            string encoding = App.GetString(App.Config.Encoding.GetDisplayName());
-            StatusFileType.Text = _fileLoaded && _sa2msg != null ? App.GetString(_sa2msg.Type.GetDisplayName()) : "";
-            StatusEncoding.Text = App.Config.CustomCodepage.HasValue ? $"{encoding}: {App.Config.CustomCodepage.Value}" : encoding;
+            string encoding = App.GetString(App.Config.Settings.Encoding.GetDisplayName());
+            StatusFileType.Text = _fileLoaded && App.SA2Msg != null ? App.GetString(App.SA2Msg.Type.GetDisplayName()) : "";
+            StatusEncoding.Text = App.Config.Settings.CustomCodepage.HasValue ? $"{encoding}: {App.Config.Settings.CustomCodepage.Value}" : encoding;
             StatusEndianness.Text = App.GetString(_selectedEndianness.GetDisplayName());
             
             if (_selectedGroupIndex != -1 && _fileLoaded)
