@@ -38,6 +38,8 @@ namespace SA2EventTextEditor.UI
 
         private void ButtonFind_Click(object sender, RoutedEventArgs e)
         {
+            if (string.IsNullOrEmpty(SearchText.Text)) return;
+
             _searchResults = App.SA2Event?.Search(SearchText.Text, IgnoreCase.IsChecked == true);
             ResultsCountNumber.Text = _searchResults?.Count.ToString();
             SearchResults.ItemsSource = _searchResults;
