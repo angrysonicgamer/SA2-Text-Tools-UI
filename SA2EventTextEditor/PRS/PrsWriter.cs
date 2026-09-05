@@ -22,7 +22,7 @@ namespace SA2EventTextEditor.PRS
 
         private void WriteEventInfo(ObservableCollection<SA2Scene> scenes, Endianness endianness)
         {
-            uint messagePointer = SA2EventInfo.Size * ((uint)scenes.Count + 1) + Pointer.BaseAddress;
+            uint messagePointer = SA2EventInfo.Size * ((uint)scenes.Count + 1) + Pointer.Base;
 
             foreach (var scene in scenes)
             {
@@ -51,7 +51,7 @@ namespace SA2EventTextEditor.PRS
                 totalMessagesCount += scene.Messages.Count;
             }
 
-            uint textPointer = SA2EventInfo.Size * ((uint)scenes.Count + 1) + _prsMessageSize * (uint)totalMessagesCount + Pointer.BaseAddress;
+            uint textPointer = SA2EventInfo.Size * ((uint)scenes.Count + 1) + _prsMessageSize * (uint)totalMessagesCount + Pointer.Base;
 
             foreach (var scene in scenes)
             {

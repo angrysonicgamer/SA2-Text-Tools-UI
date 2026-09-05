@@ -51,7 +51,7 @@ namespace SA2EventTextEditor.Common
         public void Read(BinaryReader reader, Encoding encoding, Endianness endianness)
         {
             Character = reader.ReadInt32(endianness);
-            uint textOffset = reader.ReadUInt32(endianness) - Pointer.BaseAddress;
+            uint textOffset = reader.ReadUInt32(endianness) - Pointer.Base;
             string text = reader.ReadAt(textOffset, x => x.ReadCString(encoding));
             TextCentering = GetCenteringMethod(text);
             Text = TextCentering != TextCentering.None ? text.Substring(1) : text;

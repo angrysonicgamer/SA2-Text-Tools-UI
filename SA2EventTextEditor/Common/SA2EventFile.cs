@@ -53,5 +53,31 @@ namespace SA2EventTextEditor.Common
             writer.WriteToBuffer(Events, encoding, endianness);
             writer.WriteBufferToFile(fileName);
         }
+
+        public List<SearchResult> Search(string text, bool ignoreCase)
+        {
+            var searchResults = new List<SearchResult>();
+            StringComparison comparison = ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+
+            foreach (var scene in Events)
+            {
+                for (int i = 0; i < scene.Messages.Count; i++)
+                {
+                    var message = scene.Messages[i];
+
+                    if (message.Text != null && message.Text.Contains(text, comparison))
+                    {
+                        searchResults.Add(new SearchResult(scene.EventID, i, message.Text));
+                    }
+                }
+            }
+
+            return searchResults;            
+        }
+
+        public SA2Scene? FindByEventID(int eventID)
+        {
+            return Events.FirstOrDefault(x => x.EventID == eventID);
+        }
     }
 }

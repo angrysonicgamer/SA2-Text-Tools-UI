@@ -8,6 +8,7 @@
 
     <!-- Menu -->
     <system:String x:Key="Menu.File">_File</system:String>
+    <system:String x:Key="Menu.Search">_Search</system:String>
     <system:String x:Key="Menu.Settings">_Settings</system:String>
     <system:String x:Key="Menu.Language">_Language</system:String>
     
@@ -18,6 +19,8 @@
     <system:String x:Key="Menu.File.ExportJson">Export JSON...</system:String>
     <system:String x:Key="Menu.File.Exit">Exit</system:String>
     
+    <system:String x:Key="Menu.Search.Find">Find...</system:String>
+
     <system:String x:Key="Menu.Settings.Codepage">Codepage</system:String>
     <system:String x:Key="Codepage.Latin">Latin (Windows-1252)</system:String>
     <system:String x:Key="Codepage.Cyrillic">Cyrillic (Windows-1251)</system:String>
@@ -30,7 +33,7 @@
 
     <system:String x:Key="Language.English">English</system:String>
     <system:String x:Key="Language.Russian">Русский (Russian)</system:String>
-    <system:String x:Key="Language.Japanese">日本語 (Japanese)</system:String>
+    <system:String x:Key="Language.Japanese">日本語 (Japanese)</system:String>    
     
     <!-- File filters -->
     <system:String x:Key="Filters.PRS">SA2 event text files|evmes*.prs</system:String>
@@ -41,6 +44,15 @@
     <system:String x:Key="EnterCustomCodepage.Text">Enter custom codepage</system:String>
     <system:String x:Key="EnterCustomCodepage.OK">OK</system:String>
     <system:String x:Key="EnterCustomCodepage.Cancel">Cancel</system:String>
+    
+    <!-- Search window -->
+    <system:String x:Key="Search.Title">Find</system:String>
+    <system:String x:Key="Search.FindWhat">Find what:</system:String>
+    <system:String x:Key="Search.Results">Search Results</system:String>
+    <system:String x:Key="Search.ResultsCount">Count:</system:String>
+    <system:String x:Key="Search.IgnoreCase">Ignore case</system:String>
+    <system:String x:Key="SearchResult.EventID">Event ID</system:String>
+    <system:String x:Key="SearchResult.MessageIndex">Message index</system:String>
 
     <!-- Status bar -->
     <system:String x:Key="Status.FileMode.PRS">Game file (PRS)</system:String>
@@ -76,7 +88,9 @@
     <system:String x:Key="Button.Add">Add</system:String>
     <system:String x:Key="Button.InsertAfter">Insert after</system:String>
     <system:String x:Key="Button.RemoveLast">Remove last</system:String>
-    <system:String x:Key="Button.RemoveSelected">Remove selected</system:String>    
+    <system:String x:Key="Button.RemoveSelected">Remove selected</system:String>
+    <system:String x:Key="Button.Find">Find</system:String>
+    <system:String x:Key="Button.Close">Close</system:String>
 
     <!-- Message boxes -->
     <system:String x:Key="Message.FileOpenOnClosing" xml:space="preserve">You have a file opened.&#x0a;Any unsaved changes will be lost.&#x0a;&#x0a;Exit?</system:String>
@@ -85,6 +99,7 @@
     <system:String x:Key="Message.AutoEndiannessSaveAs" xml:space="preserve">Unable to save PRS file from imported JSON&#x0a;with automatic endianness setting.&#x0a;&#x0a;Please select Big Endian or Little Endian.</system:String>
     <system:String x:Key="Message.UnsupportedCodepage" xml:space="preserve">The entered codepage is not supported.</system:String>
     <system:String x:Key="Message.InvalidJson" xml:space="preserve">The imported JSON doesn't contain SA2 event data.</system:String>
+    <system:String x:Key="Message.NothingFound" xml:space="preserve">Nothing found.</system:String>
     <!-- #endregion -->
 
     <!-- #region Event names -->

@@ -18,19 +18,18 @@ namespace SA2EventTextEditor.UI
     {
         private string? _fileName;
         private bool _fileLoaded = false;
-        private SA2EventFile? _sa2event;
         private SA2Scene? _selectedScene;
         private int _selectedSceneIndex = -1;
         private Encoding _selectedEncoding;
         private Endianness _selectedEndianness;
-        private OpenFileMode _mode;
+        private OpenFileMode _mode;        
 
 
         public MainWindow()
         {
             InitializeComponent();            
-            _selectedEncoding = App.Config.CustomCodepage.HasValue ? Encoding.GetEncoding(App.Config.CustomCodepage.Value) : Encoding.GetEncoding((int)App.Config.Encoding);
-            _selectedEndianness = App.Config.Endianness;
+            _selectedEncoding = App.Config.Settings.CustomCodepage.HasValue ? Encoding.GetEncoding(App.Config.Settings.CustomCodepage.Value) : Encoding.GetEncoding((int)App.Config.Settings.Encoding);
+            _selectedEndianness = App.Config.Settings.Endianness;
         }
 
         private void WindowTextEditor_Loaded(object sender, RoutedEventArgs e)
@@ -44,7 +43,7 @@ namespace SA2EventTextEditor.UI
         {
             if (_fileLoaded)
             {
-                var result = MessageBox.Show(App.GetString("Message.FileOpenOnClosing"), App.GetString("MainWindow.Title"), MessageBoxButton.OKCancel);
+                var result = MessageBox.Show(App.GetString("Message.FileOpenOnClosing"), App.GetString("MainWindow.Title"), MessageBoxButton.OKCancel, MessageBoxImage.Information);
 
                 if (result == MessageBoxResult.Cancel)
                 {
@@ -62,7 +61,7 @@ namespace SA2EventTextEditor.UI
 
         private void SetupMenusInitial()
         {
-            switch (App.Config.Encoding)
+            switch (App.Config.Settings.Encoding)
             {
                 case Codepage.Windows1252:
                     Codepage1252.IsChecked = true;
@@ -78,7 +77,7 @@ namespace SA2EventTextEditor.UI
                     break;
             }
 
-            switch (App.Config.Endianness)
+            switch (App.Config.Settings.Endianness)
             {
                 case Endianness.Auto:
                     AutoEndian.IsChecked = true;
@@ -91,7 +90,7 @@ namespace SA2EventTextEditor.UI
                     break;
             }
 
-            switch (App.Config.Language)
+            switch (App.Config.Settings.Language)
             {
                 case Common.Language.English:
                     MenuEnglish.IsChecked = true;
@@ -114,8 +113,9 @@ namespace SA2EventTextEditor.UI
             MenuSave.IsEnabled = false;
             MenuSaveAs.IsEnabled = false;
             MenuExportJson.IsEnabled = false;
+            MenuSearch.IsEnabled = false;
             AutoEndian.IsEnabled = true;
-            ListEventIDs.Visibility = Visibility.Hidden;
+            Events.Visibility = Visibility.Hidden;
             GridMessagesList.Visibility = Visibility.Hidden;
             UpdateStatusBar();
         }
@@ -127,10 +127,11 @@ namespace SA2EventTextEditor.UI
             MenuSave.IsEnabled = _mode == OpenFileMode.OpenPRS;
             MenuSaveAs.IsEnabled = true;
             MenuExportJson.IsEnabled = true;
+            MenuSearch.IsEnabled = true;
             AutoEndian.IsEnabled = false;
-            ListEventIDs.ItemsSource = _sa2event?.Events;
-            ListEventIDs.Visibility = Visibility.Visible;
-            ListEventIDs.Items.SortDescriptions.Add(new SortDescription("EventID", ListSortDirection.Ascending));
+            Events.ItemsSource = App.SA2Event?.Events;
+            Events.Visibility = Visibility.Visible;
+            Events.Items.SortDescriptions.Add(new SortDescription("EventID", ListSortDirection.Ascending));
             GridMessagesList.Visibility = Visibility.Hidden;
             UpdateStatusBar();
         }
@@ -151,7 +152,7 @@ namespace SA2EventTextEditor.UI
         {
             if (_fileLoaded)
             {
-                var result = MessageBox.Show(App.GetString("Message.FileOpenOnOpeningNewFile"), App.GetString("MainWindow.Title"), MessageBoxButton.YesNo);
+                var result = MessageBox.Show(App.GetString("Message.FileOpenOnOpeningNewFile"), App.GetString("MainWindow.Title"), MessageBoxButton.YesNo, MessageBoxImage.Information);
                 if (result == MessageBoxResult.No) return;
             }
 
@@ -159,10 +160,10 @@ namespace SA2EventTextEditor.UI
             if (openFileWindow.ShowDialog() == false) return;
 
             _fileName = openFileWindow.FileName;
-            _sa2event = new SA2EventFile(_fileName);
-            var detectedEndianness = _sa2event.DetectEndianness();
+            App.SA2Event = new SA2EventFile(_fileName);
+            var detectedEndianness = App.SA2Event.DetectEndianness();
 
-            if (App.Config.Endianness != Endianness.Auto)
+            if (App.Config.Settings.Endianness != Endianness.Auto)
             {
                 if (detectedEndianness != _selectedEndianness)
                 {
@@ -179,19 +180,19 @@ namespace SA2EventTextEditor.UI
             }
 
             _mode = OpenFileMode.OpenPRS;
-            _sa2event.ReadEventData(_selectedEncoding, _selectedEndianness);
+            App.SA2Event.ReadEventData(_selectedEncoding, _selectedEndianness);
             SetupViewOnFileLoading();
             UpdateStatusBar();
         }
 
         private void CommandSave_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            _sa2event?.Save(_fileName, _selectedEncoding, _selectedEndianness);
+            App.SA2Event?.Save(_fileName, _selectedEncoding, _selectedEndianness);
         }
 
         private void CommandSaveAs_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            if (_mode == OpenFileMode.ImportJSON && App.Config.Endianness == Endianness.Auto)
+            if (_mode == OpenFileMode.ImportJSON && App.Config.Settings.Endianness == Endianness.Auto)
             {
                 MessageBox.Show(App.GetString("Message.AutoEndiannessSaveAs"), App.GetString("MainWindow.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
@@ -208,7 +209,7 @@ namespace SA2EventTextEditor.UI
         {
             if (_fileLoaded)
             {
-                var result = MessageBox.Show(App.GetString("Message.FileOpenOnOpeningNewFile"), App.GetString("MainWindow.Title"), MessageBoxButton.YesNo);
+                var result = MessageBox.Show(App.GetString("Message.FileOpenOnOpeningNewFile"), App.GetString("MainWindow.Title"), MessageBoxButton.YesNo, MessageBoxImage.Information);
                 if (result == MessageBoxResult.No) return;
             }
 
@@ -216,9 +217,9 @@ namespace SA2EventTextEditor.UI
             if (openFileWindow.ShowDialog() == false) return;
 
             _fileName = openFileWindow.FileName;
-            _sa2event = Json.Import<SA2EventFile>(_fileName);
+            App.SA2Event = Json.Import<SA2EventFile>(_fileName);
 
-            if (_sa2event?.Events != null)
+            if (App.SA2Event?.Events != null)
             {
                 _mode = OpenFileMode.ImportJSON;
                 SetupViewOnFileLoading();
@@ -236,12 +237,25 @@ namespace SA2EventTextEditor.UI
             if (saveFileDialog.ShowDialog() == false) return;
 
             _fileName = saveFileDialog.FileName;
-            Json.Export(_sa2event, _fileName);
+            Json.Export(App.SA2Event, _fileName);
         }
 
         private void CommandClose_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             Close();
+        }
+
+        #endregion
+
+
+        #region Menu > Search
+
+        private void CommandSearch_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (App.SA2Event == null) return;
+
+            var searchWindow = new SearchWindow() { Text = App.LastSearchText };
+            searchWindow.Show();
         }
 
         #endregion
@@ -260,7 +274,7 @@ namespace SA2EventTextEditor.UI
         private void Codepage1251_Click(object sender, RoutedEventArgs e)
         {
             var newEncoding = Encoding.GetEncoding((int)Codepage.Windows1251);
-            _sa2event?.Reencode(_selectedEncoding, newEncoding);
+            App.SA2Event?.Reencode(_selectedEncoding, newEncoding);
             _selectedEncoding = newEncoding;
             CheckCodepageMenuItem(Codepage1251);
             App.Config.SetEncoding(Codepage.Windows1251);
@@ -271,7 +285,7 @@ namespace SA2EventTextEditor.UI
         private void Codepage1252_Click(object sender, RoutedEventArgs e)
         {
             var newEncoding = Encoding.GetEncoding((int)Codepage.Windows1252);
-            _sa2event?.Reencode(_selectedEncoding, newEncoding);
+            App.SA2Event?.Reencode(_selectedEncoding, newEncoding);
             _selectedEncoding = newEncoding;
             CheckCodepageMenuItem(Codepage1252);
             App.Config.SetEncoding(Codepage.Windows1252);
@@ -282,7 +296,7 @@ namespace SA2EventTextEditor.UI
         private void CodepageSJIS_Click(object sender, RoutedEventArgs e)
         {
             var newEncoding = Encoding.GetEncoding((int)Codepage.ShiftJIS);
-            _sa2event?.Reencode(_selectedEncoding, newEncoding);
+            App.SA2Event?.Reencode(_selectedEncoding, newEncoding);
             _selectedEncoding = newEncoding;
             CheckCodepageMenuItem(CodepageSJIS);
             App.Config.SetEncoding(Codepage.ShiftJIS);
@@ -311,7 +325,7 @@ namespace SA2EventTextEditor.UI
                     return;
                 }
 
-                _sa2event?.Reencode(_selectedEncoding, newEncoding);
+                App.SA2Event?.Reencode(_selectedEncoding, newEncoding);
                 _selectedEncoding = newEncoding;
 
                 if (customCodepage == (int)Codepage.Windows1252)
@@ -349,7 +363,7 @@ namespace SA2EventTextEditor.UI
             AutoEndian.IsChecked = true;
             BigEndian.IsChecked = false;
             LittleEndian.IsChecked = false;
-            App.Config.Endianness = Endianness.Auto;
+            App.Config.Settings.Endianness = Endianness.Auto;
             App.Config.Save();
             UpdateStatusBar();
         }
@@ -359,7 +373,7 @@ namespace SA2EventTextEditor.UI
             BigEndian.IsChecked = true;
             LittleEndian.IsChecked = false;
             AutoEndian.IsChecked = false;
-            _selectedEndianness = App.Config.Endianness = Endianness.BigEndian;
+            _selectedEndianness = App.Config.Settings.Endianness = Endianness.BigEndian;
             Pointer.SetBaseAddress(_selectedEndianness);            
             App.Config.Save();
             UpdateStatusBar();
@@ -370,7 +384,7 @@ namespace SA2EventTextEditor.UI
             LittleEndian.IsChecked = true;
             BigEndian.IsChecked = false;
             AutoEndian.IsChecked = false;
-            _selectedEndianness = App.Config.Endianness = Endianness.LittleEndian;
+            _selectedEndianness = App.Config.Settings.Endianness = Endianness.LittleEndian;
             Pointer.SetBaseAddress(_selectedEndianness);            
             App.Config.Save();
             UpdateStatusBar();
@@ -419,27 +433,27 @@ namespace SA2EventTextEditor.UI
 
         private void UpdateViewOnLanguageChange()
         {
-            ListEventIDs.ItemsSource = null;
-            ListEventIDs.ItemsSource = _sa2event?.Events;
-            DataGridMessages.ItemsSource = null;
-            DataGridMessages.ItemsSource = _selectedScene?.Messages;
+            Events.ItemsSource = null;
+            Events.ItemsSource = App.SA2Event?.Events;
+            EventMessages.ItemsSource = null;
+            EventMessages.ItemsSource = _selectedScene?.Messages;
         }
 
-        #endregion
+        #endregion        
 
         #endregion
 
 
         #region List box (Event IDs)
 
-        private void ListEventIDs_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void Events_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (ListEventIDs.SelectedIndex != -1)
+            if (Events.SelectedIndex != -1)
             {
                 GridMessagesList.Visibility = Visibility.Visible;
-                _selectedScene = ListEventIDs.SelectedItem as SA2Scene;
-                DataGridMessages.ItemsSource = _selectedScene?.Messages;
-                _selectedSceneIndex = ListEventIDs.SelectedIndex;
+                _selectedScene = Events.SelectedItem as SA2Scene;
+                EventMessages.ItemsSource = _selectedScene?.Messages;
+                _selectedSceneIndex = Events.SelectedIndex;
             }
 
             UpdateStatusBar();
@@ -448,12 +462,22 @@ namespace SA2EventTextEditor.UI
         #endregion
 
 
-        #region Data grid (Messages list for selected event ID)
+        #region Data grid (Messages list for selected event)
 
-        private void DataGridMessages_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void EventMessages_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ButtonInsertAfter.IsEnabled = DataGridMessages.SelectedIndex != -1;
-            ButtonRemoveSelected.IsEnabled = DataGridMessages.SelectedIndex != -1;
+            ButtonInsertAfter.IsEnabled = EventMessages.SelectedIndex != -1;
+            ButtonRemoveSelected.IsEnabled = EventMessages.SelectedIndex != -1;
+
+            if (sender is DataGrid dataGrid && dataGrid.SelectedItem != null)
+            {
+                dataGrid.Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        dataGrid.UpdateLayout();
+                        dataGrid.ScrollIntoView(dataGrid.SelectedItem);
+                    }));
+            }
+
             UpdateStatusBar();
         }
 
@@ -476,9 +500,9 @@ namespace SA2EventTextEditor.UI
 
         private void ButtonInsertAfter_Click(object sender, RoutedEventArgs e)
         {
-            if (DataGridMessages.SelectedIndex + 1 < _selectedScene?.Messages.Count)
+            if (EventMessages.SelectedIndex + 1 < _selectedScene?.Messages.Count)
             {
-                _selectedScene?.Messages.Insert(DataGridMessages.SelectedIndex + 1, new SA2EventMessage());
+                _selectedScene?.Messages.Insert(EventMessages.SelectedIndex + 1, new SA2EventMessage());
             }
             else
             {
@@ -490,7 +514,7 @@ namespace SA2EventTextEditor.UI
 
         private void ButtonRemoveSelected_Click(object sender, RoutedEventArgs e)
         {
-            _selectedScene?.Messages.RemoveAt(DataGridMessages.SelectedIndex);
+            _selectedScene?.Messages.RemoveAt(EventMessages.SelectedIndex);
             UpdateStatusBar();
         }
 
@@ -507,16 +531,16 @@ namespace SA2EventTextEditor.UI
 
         private void UpdateStatusBar()
         {
-            string encoding = App.GetString(App.Config.Encoding.GetDisplayName());            
+            string encoding = App.GetString(App.Config.Settings.Encoding.GetDisplayName());            
             StatusMode.Text = _fileLoaded ? App.GetString(_mode.GetDisplayName()) : "";
-            StatusEncoding.Text = App.Config.CustomCodepage.HasValue ? $"{encoding}: {App.Config.CustomCodepage.Value}" : encoding;
+            StatusEncoding.Text = App.Config.Settings.CustomCodepage.HasValue ? $"{encoding}: {App.Config.Settings.CustomCodepage.Value}" : encoding;
             StatusEndianness.Text = App.GetString(_selectedEndianness.GetDisplayName());
 
             if (_selectedSceneIndex != -1 && _fileLoaded)
             {
                 SetDetailsVisibility(Visibility.Visible);
                 StatusEventID.Text = $"{App.GetString("Status.EventID")}: {_selectedScene?.EventID}";
-                StatusSelectedItem.Text = DataGridMessages.SelectedIndex != -1 ? $"{App.GetString("Status.SelectedItem")}: {DataGridMessages.SelectedIndex + 1}" : App.GetString("Status.SelectedItem.None");
+                StatusSelectedItem.Text = EventMessages.SelectedIndex != -1 ? $"{App.GetString("Status.SelectedItem")}: {EventMessages.SelectedIndex}" : App.GetString("Status.SelectedItem.None");
                 StatusTotalItems.Text = $"{App.GetString("Status.TotalItems")}: {_selectedScene?.Messages.Count}";
             }
             else
@@ -530,6 +554,6 @@ namespace SA2EventTextEditor.UI
             SetDetailsVisibility(Visibility.Hidden);
         }
 
-        #endregion        
+        #endregion
     }
 }

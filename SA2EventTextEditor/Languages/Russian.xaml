@@ -8,6 +8,7 @@
     
     <!-- Menu -->
 	<system:String x:Key="Menu.File">_Файл</system:String>
+    <system:String x:Key="Menu.Search">_Поиск</system:String>
     <system:String x:Key="Menu.Settings">_Настройки</system:String>
     <system:String x:Key="Menu.Language">_Язык</system:String>
     
@@ -17,8 +18,10 @@
 	<system:String x:Key="Menu.File.ImportJson">Импортировать JSON...</system:String>
 	<system:String x:Key="Menu.File.ExportJson">Экспортировать JSON...</system:String>
 	<system:String x:Key="Menu.File.Exit">Выход</system:String>
-	
-	<system:String x:Key="Menu.Settings.Codepage">Кодировка</system:String>
+    
+    <system:String x:Key="Menu.Search.Find">Найти...</system:String>
+
+    <system:String x:Key="Menu.Settings.Codepage">Кодировка</system:String>
 	<system:String x:Key="Codepage.Latin">Латиница (Windows-1252)</system:String>
 	<system:String x:Key="Codepage.Cyrillic">Кириллица (Windows-1251)</system:String>
 	<system:String x:Key="Codepage.Japanese">Японская (Shift-JIS)</system:String>
@@ -41,6 +44,15 @@
     <system:String x:Key="EnterCustomCodepage.Text">Введите номер кодировки</system:String>
     <system:String x:Key="EnterCustomCodepage.OK">OK</system:String>
     <system:String x:Key="EnterCustomCodepage.Cancel">Отмена</system:String>
+
+    <!-- Search window -->
+    <system:String x:Key="Search.Title">Найти</system:String>
+    <system:String x:Key="Search.FindWhat">Найти что:</system:String>
+    <system:String x:Key="Search.Results">Результаты поиска</system:String>
+    <system:String x:Key="Search.ResultsCount">Количество:</system:String>
+    <system:String x:Key="Search.IgnoreCase">Игнорировать регистр</system:String>
+    <system:String x:Key="SearchResult.EventID">ID сцены</system:String>
+    <system:String x:Key="SearchResult.MessageIndex">Индекс</system:String>
 
     <!-- Status bar -->
     <system:String x:Key="Status.FileMode.PRS">Игровой файл (PRS)</system:String>
@@ -77,6 +89,8 @@
 	<system:String x:Key="Button.InsertAfter">Вставить после</system:String>
 	<system:String x:Key="Button.RemoveLast">Удалить последний</system:String>
 	<system:String x:Key="Button.RemoveSelected">Удалить выбранный</system:String>
+    <system:String x:Key="Button.Find">Найти</system:String>
+    <system:String x:Key="Button.Close">Закрыть</system:String>
 
     <!-- Message boxes -->
     <system:String x:Key="Message.FileOpenOnClosing" xml:space="preserve">Открыт файл в приложении.&#x0a;Все несохранённые изменения будут утеряны.&#x0a;&#x0a;Выйти?</system:String>
@@ -85,6 +99,7 @@
     <system:String x:Key="Message.AutoEndiannessSaveAs" xml:space="preserve">Невозможно сохранить PRS-файл&#x0a;из импортированного JSON-файла&#x0a;с автоопределением порядка байтов.&#x0a;&#x0a;Пожалуйста, выберите Big Endian или Little Endian.</system:String>
     <system:String x:Key="Message.UnsupportedCodepage" xml:space="preserve">Введённая кодовая страница не поддерживается.</system:String>
     <system:String x:Key="Message.InvalidJson" xml:space="preserve">Импортированный JSON-файл не содержит&#x0a;данных о катсценах SA2.</system:String>
+    <system:String x:Key="Message.NothingFound" xml:space="preserve">Ничего не найдено.</system:String>
     <!-- #endregion -->
 
     <!-- #region Event names -->

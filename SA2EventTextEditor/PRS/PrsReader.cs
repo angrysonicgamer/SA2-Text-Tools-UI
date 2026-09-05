@@ -47,7 +47,7 @@ namespace SA2EventTextEditor.PRS
             foreach (var scene in eventInfoList)
             {
                 var messages = new ObservableCollection<SA2EventMessage>();
-                _reader.SetPosition(scene.MessagePointer - Pointer.BaseAddress);
+                _reader.SetPosition(scene.MessagePointer - Pointer.Base);
 
                 if (scene.TotalMessages == 0)
                 {
