@@ -21,11 +21,19 @@ namespace SA2MsgTextEditor.UI
 
         private void WindowSearch_Loaded(object sender, RoutedEventArgs e)
         {
-            SearchText.Text = Text;
+            SearchString.Text = Text;
             IgnoreCase.IsChecked = App.Config.Search.IgnoreCase;
         }
 
-        private void SearchText_KeyUp(object sender, KeyEventArgs e)
+        private void WindowSearch_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape)
+            {
+                Close();
+            }
+        }
+
+        private void SearchString_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
@@ -38,12 +46,12 @@ namespace SA2MsgTextEditor.UI
 
         private void ButtonFind_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(SearchText.Text)) return;
+            if (string.IsNullOrEmpty(SearchString.Text)) return;
             
-            _searchResults = App.SA2Msg?.Search(SearchText.Text, IgnoreCase.IsChecked == true);
+            _searchResults = App.SA2Msg?.Search(SearchString.Text, IgnoreCase.IsChecked == true);
             ResultsCountNumber.Text = _searchResults?.Count.ToString();
             SearchResults.ItemsSource = _searchResults;
-            App.LastSearchText = SearchText.Text;
+            App.LastSearchText = SearchString.Text;
 
             if (_searchResults?.Count == 0)
             {
@@ -86,6 +94,6 @@ namespace SA2MsgTextEditor.UI
                 mainWindow.ListGroupedMessages.SelectedIndex = _searchResults[SearchResults.SelectedIndex].GroupIndex;
                 mainWindow.MessagesList.SelectedIndex = _searchResults[SearchResults.SelectedIndex].MessageIndex;
             }
-        }
+        }        
     }
 }

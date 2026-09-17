@@ -53,6 +53,7 @@
     <system:String x:Key="Search.IgnoreCase">Игнорировать регистр</system:String>
     <system:String x:Key="SearchResult.EventID">ID сцены</system:String>
     <system:String x:Key="SearchResult.MessageIndex">Индекс</system:String>
+    <system:String x:Key="SearchResult.Tooltip">Перейти к сообщению</system:String>
 
     <!-- Status bar -->
     <system:String x:Key="Status.FileMode.PRS">Игровой файл (PRS)</system:String>

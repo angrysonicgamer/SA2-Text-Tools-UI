@@ -6,13 +6,13 @@ namespace SA2MsgTextEditor.UI
     /// <summary>
     /// Interaction logic for InputCustomCodepage.xaml
     /// </summary>
-    public partial class InputCustomCodepage : Window
+    public partial class CustomCodepageDialog : Window
     {
         public int? Codepage { get; set; }
         
-        public InputCustomCodepage()
+        public CustomCodepageDialog()
         {
-            InitializeComponent();            
+            InitializeComponent();
         }
 
         private void WindowCustomCodepage_Loaded(object sender, RoutedEventArgs e)

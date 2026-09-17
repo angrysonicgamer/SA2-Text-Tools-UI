@@ -1,4 +1,6 @@
 ﻿using SA2EventTextEditor.Common;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -10,8 +12,9 @@ namespace SA2EventTextEditor.UI
     /// </summary>
     public partial class SearchWindow : Window
     {
+        private List<SearchResult>? _searchResults;  
+        
         public string? Text { get; set; }
-        private List<SearchResult>? _searchResults;
 
 
         public SearchWindow()
@@ -21,11 +24,19 @@ namespace SA2EventTextEditor.UI
 
         private void WindowSearch_Loaded(object sender, RoutedEventArgs e)
         {
-            SearchText.Text = Text;
+            SearchString.Text = Text;
             IgnoreCase.IsChecked = App.Config.Search.IgnoreCase;
         }
 
-        private void SearchText_KeyUp(object sender, KeyEventArgs e)
+        private void WindowSearch_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape)
+            {
+                Close();
+            }
+        }
+
+        private void SearchString_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
@@ -38,12 +49,12 @@ namespace SA2EventTextEditor.UI
 
         private void ButtonFind_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(SearchText.Text)) return;
+            if (string.IsNullOrEmpty(SearchString.Text)) return;
 
-            _searchResults = App.SA2Event?.Search(SearchText.Text, IgnoreCase.IsChecked == true);
+            _searchResults = App.SA2Event?.Search(SearchString.Text, IgnoreCase.IsChecked == true);
             ResultsCountNumber.Text = _searchResults?.Count.ToString();
-            SearchResults.ItemsSource = _searchResults;
-            App.LastSearchText = SearchText.Text;
+            SearchResultsList.ItemsSource = _searchResults;
+            App.LastSearchText = SearchString.Text;
 
             if (_searchResults?.Count == 0)
             {
@@ -77,10 +88,10 @@ namespace SA2EventTextEditor.UI
 
         private void SearchResults_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (SearchResults.SelectedIndex == -1 || _searchResults == null) return;
+            if (SearchResultsList.SelectedIndex == -1 || _searchResults == null) return;
             
             var mainWindow = Application.Current.MainWindow as MainWindow;
-            int eventID = _searchResults[SearchResults.SelectedIndex].EventID;
+            int eventID = _searchResults[SearchResultsList.SelectedIndex].EventID;
 
             if (mainWindow != null && App.SA2Event != null)
             {
@@ -88,8 +99,8 @@ namespace SA2EventTextEditor.UI
 
                 if (selectedScene != null)
                 {
-                    mainWindow.Events.SelectedIndex = App.SA2Event.Events.IndexOf(selectedScene);
-                    mainWindow.EventMessages.SelectedIndex = _searchResults[SearchResults.SelectedIndex].MessageIndex;
+                    mainWindow.Events.SelectedItem = selectedScene;
+                    mainWindow.EventMessages.SelectedIndex = _searchResults[SearchResultsList.SelectedIndex].MessageIndex;
                 }                
             }
         }        

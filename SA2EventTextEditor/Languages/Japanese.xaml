@@ -53,6 +53,7 @@
     <system:String x:Key="Search.IgnoreCase">大／小文字を区別しない</system:String>
     <system:String x:Key="SearchResult.EventID">イベントID</system:String>
     <system:String x:Key="SearchResult.MessageIndex">メッセージ</system:String>
+    <system:String x:Key="SearchResult.Tooltip">メッセージへ</system:String>
 
     <!-- Status bar -->
     <system:String x:Key="Status.FileMode.PRS">ゲームファイル (PRS)</system:String>

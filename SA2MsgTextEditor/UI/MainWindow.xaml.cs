@@ -377,7 +377,7 @@ namespace SA2MsgTextEditor.UI
 
         private void CodepageCustom_Click(object sender, RoutedEventArgs e)
         {
-            var inputCustomCodepage = new InputCustomCodepage { Codepage = _selectedEncoding.CodePage };
+            var inputCustomCodepage = new CustomCodepageDialog { Codepage = _selectedEncoding.CodePage };
             bool? result = inputCustomCodepage.ShowDialog();
 
             if (result == true)
@@ -515,7 +515,7 @@ namespace SA2MsgTextEditor.UI
 
         private void ListGroupedMessages_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (ListGroupedMessages.SelectedItem is ObservableCollection<SA2Message> msgList)
+            if (sender is ListBox listBox && listBox.SelectedItem is ObservableCollection<SA2Message> msgList)
             {
                 MessagesList.Visibility = Visibility.Visible;
                 ButtonAdd.Visibility = Visibility.Visible;
@@ -524,7 +524,13 @@ namespace SA2MsgTextEditor.UI
                 ButtonRemoveSelected.Visibility = Visibility.Visible;
                 MessagesList.ItemsSource = msgList;
                 _selectedGroup = msgList;
-                _selectedGroupIndex = ListGroupedMessages.SelectedIndex;
+                _selectedGroupIndex = listBox.SelectedIndex;
+
+                listBox.Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    listBox.UpdateLayout();
+                    listBox.ScrollIntoView(listBox.SelectedItem);
+                }));
             }
 
             UpdateStatusBar();
@@ -610,8 +616,8 @@ namespace SA2MsgTextEditor.UI
             if (_selectedGroupIndex != -1 && _fileLoaded)
             {
                 SetDetailsVisibility(Visibility.Visible);
-                StatusSelectedGroup.Text = $"{App.GetString("Status.SelectedGroup")}: {_selectedGroupIndex + 1}";
-                StatusSelectedItem.Text = MessagesList.SelectedIndex != -1 ? $"{App.GetString("Status.SelectedItem")}: {MessagesList.SelectedIndex + 1}" : App.GetString("Status.SelectedItem.None");
+                StatusSelectedGroup.Text = $"{App.GetString("Status.SelectedGroup")}: {_selectedGroupIndex}";
+                StatusSelectedItem.Text = MessagesList.SelectedIndex != -1 ? $"{App.GetString("Status.SelectedItem")}: {MessagesList.SelectedIndex}" : App.GetString("Status.SelectedItem.None");
                 StatusTotalItems.Text = $"{App.GetString("Status.TotalItems")}: {_selectedGroup?.Count}";
             }
             else

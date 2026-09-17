@@ -6,11 +6,11 @@ namespace SA2EventTextEditor.UI
     /// <summary>
     /// Interaction logic for InputCustomCodepage.xaml
     /// </summary>
-    public partial class InputCustomCodepage : Window
+    public partial class CustomCodepageDialog : Window
     {
         public int? Codepage { get; set; }
         
-        public InputCustomCodepage()
+        public CustomCodepageDialog()
         {
             InitializeComponent();            
         }

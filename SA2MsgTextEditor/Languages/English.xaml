@@ -57,6 +57,7 @@
     <system:String x:Key="Search.Results">Search Results</system:String>
     <system:String x:Key="Search.ResultsCount">Count:</system:String>
     <system:String x:Key="Search.IgnoreCase">Ignore case</system:String>
+    <system:String x:Key="SearchResult.Tooltip">Jump to message</system:String>
 
     <!-- Status bar -->
     <system:String x:Key="Status.FileType.HuntingHints">Treasure hunting hints</system:String>

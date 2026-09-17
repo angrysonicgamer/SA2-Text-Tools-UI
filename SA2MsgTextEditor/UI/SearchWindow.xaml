@@ -10,7 +10,8 @@
         Width="640" Height="480"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
-        Loaded="WindowSearch_Loaded">
+        Loaded="WindowSearch_Loaded"
+        KeyUp="WindowSearch_KeyUp">
 
     <Window.Resources>
         <Style x:Key="DefaultButton" TargetType="Button">
@@ -36,7 +37,7 @@
             <Setter Property="BorderBrush" Value="DarkGray" />
             <Setter Property="IsEnabled" Value="True" />
             <Style.Triggers>
-                <DataTrigger Binding="{Binding Text, ElementName=SearchText, TargetNullValue=''}" Value="{x:Static sys:String.Empty}">
+                <DataTrigger Binding="{Binding Text, ElementName=SearchString, TargetNullValue=''}" Value="{x:Static sys:String.Empty}">
                     <Setter Property="IsEnabled" Value="False" />
                 </DataTrigger>
             </Style.Triggers>
@@ -59,7 +60,7 @@
         <StackPanel Grid.Column="0" Orientation="Vertical" VerticalAlignment="Top" Margin="10">
             <StackPanel Orientation="Horizontal">
                 <TextBlock x:Name="FindWhat" Text="{DynamicResource Search.FindWhat}" VerticalAlignment="Center" />
-                <TextBox x:Name="SearchText" FontSize="14" Width="210" Height="25" TextAlignment="Left" VerticalContentAlignment="Center" Margin="10,0,0,0" KeyUp="SearchText_KeyUp" />
+                <TextBox x:Name="SearchString" FontSize="14" Width="210" Height="25" TextAlignment="Left" VerticalContentAlignment="Center" Margin="10,0,0,0" KeyUp="SearchString_KeyUp" />
             </StackPanel>
             <StackPanel Orientation="Vertical" HorizontalAlignment="Left" Margin="0,20,0,0">
                 <CheckBox x:Name="IgnoreCase" Content="{DynamicResource Search.IgnoreCase}" Checked="IgnoreCase_Checked" Unchecked="IgnoreCase_Unchecked" />
@@ -85,6 +86,12 @@
                             <Setter Property="CornerRadius" Value="3"/>
                         </Style>
                     </ListBox.Resources>
+
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Text}" ToolTip="{DynamicResource SearchResult.Tooltip}" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
                 </ListBox>
             </Grid>
         </GroupBox>

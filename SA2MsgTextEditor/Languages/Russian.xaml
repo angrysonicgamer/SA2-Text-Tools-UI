@@ -57,6 +57,7 @@
     <system:String x:Key="Search.Results">Результаты поиска</system:String>
     <system:String x:Key="Search.ResultsCount">Количество:</system:String>
     <system:String x:Key="Search.IgnoreCase">Игнорировать регистр</system:String>
+    <system:String x:Key="SearchResult.Tooltip">Перейти к сообщению</system:String>
 
     <!-- Status bar -->
     <system:String x:Key="Status.FileType.HuntingHints">Подсказки для поисковых уровней</system:String>

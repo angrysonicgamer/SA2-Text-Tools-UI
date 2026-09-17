@@ -2,6 +2,7 @@
 using SA2EventTextEditor.Common;
 using SA2EventTextEditor.Extensions;
 using SA2EventTextEditor.JSON;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Text;
@@ -19,7 +20,6 @@ namespace SA2EventTextEditor.UI
         private string? _fileName;
         private bool _fileLoaded = false;
         private SA2Scene? _selectedScene;
-        private int _selectedSceneIndex = -1;
         private Encoding _selectedEncoding;
         private Endianness _selectedEndianness;
         private OpenFileMode _mode;        
@@ -306,7 +306,7 @@ namespace SA2EventTextEditor.UI
 
         private void CodepageCustom_Click(object sender, RoutedEventArgs e)
         {
-            var inputCustomCodepage = new InputCustomCodepage { Codepage = _selectedEncoding.CodePage };
+            var inputCustomCodepage = new CustomCodepageDialog { Codepage = _selectedEncoding.CodePage };
             bool? result = inputCustomCodepage.ShowDialog();
 
             if (result == true)
@@ -448,12 +448,17 @@ namespace SA2EventTextEditor.UI
 
         private void Events_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (Events.SelectedIndex != -1)
+            if (sender is ListBox listBox && listBox.SelectedItem != null)
             {
                 GridMessagesList.Visibility = Visibility.Visible;
-                _selectedScene = Events.SelectedItem as SA2Scene;
+                _selectedScene = listBox.SelectedItem as SA2Scene;
                 EventMessages.ItemsSource = _selectedScene?.Messages;
-                _selectedSceneIndex = Events.SelectedIndex;
+
+                listBox.Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    listBox.UpdateLayout();
+                    listBox.ScrollIntoView(listBox.SelectedItem);
+                }));
             }
 
             UpdateStatusBar();
@@ -472,10 +477,10 @@ namespace SA2EventTextEditor.UI
             if (sender is DataGrid dataGrid && dataGrid.SelectedItem != null)
             {
                 dataGrid.Dispatcher.BeginInvoke(new Action(() =>
-                    {
-                        dataGrid.UpdateLayout();
-                        dataGrid.ScrollIntoView(dataGrid.SelectedItem);
-                    }));
+                {
+                    dataGrid.UpdateLayout();
+                    dataGrid.ScrollIntoView(dataGrid.SelectedItem);
+                }));
             }
 
             UpdateStatusBar();
@@ -536,7 +541,7 @@ namespace SA2EventTextEditor.UI
             StatusEncoding.Text = App.Config.Settings.CustomCodepage.HasValue ? $"{encoding}: {App.Config.Settings.CustomCodepage.Value}" : encoding;
             StatusEndianness.Text = App.GetString(_selectedEndianness.GetDisplayName());
 
-            if (_selectedSceneIndex != -1 && _fileLoaded)
+            if (_selectedScene != null && _fileLoaded)
             {
                 SetDetailsVisibility(Visibility.Visible);
                 StatusEventID.Text = $"{App.GetString("Status.EventID")}: {_selectedScene?.EventID}";

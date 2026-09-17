@@ -57,6 +57,7 @@
     <system:String x:Key="Search.Results">検索リザルト</system:String>
     <system:String x:Key="Search.ResultsCount">リザルト数:</system:String>
     <system:String x:Key="Search.IgnoreCase">大／小文字を区別しない</system:String>
+    <system:String x:Key="SearchResult.Tooltip">メッセージへ</system:String>
 
     <!-- Status bar -->
     <system:String x:Key="Status.FileType.HuntingHints">宝探しヒント</system:String>

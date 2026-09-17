@@ -53,6 +53,7 @@
     <system:String x:Key="Search.IgnoreCase">Ignore case</system:String>
     <system:String x:Key="SearchResult.EventID">Event ID</system:String>
     <system:String x:Key="SearchResult.MessageIndex">Message index</system:String>
+    <system:String x:Key="SearchResult.Tooltip">Jump to message</system:String>
 
     <!-- Status bar -->
     <system:String x:Key="Status.FileMode.PRS">Game file (PRS)</system:String>
