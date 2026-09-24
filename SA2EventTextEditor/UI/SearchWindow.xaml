@@ -4,8 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        xmlns:common="clr-namespace:SA2EventTextEditor.Common"
-        xmlns:localui="clr-namespace:SA2EventTextEditor.UI"
+        xmlns:converters="clr-namespace:SA2EventTextEditor.UI.Converters"
         mc:Ignorable="d"
         Title="{DynamicResource Search.Title}"
         Width="640" Height="480"
@@ -83,7 +82,7 @@
                 </StackPanel>
                 <ListBox x:Name="SearchResultsList" Grid.Row="1" BorderBrush="LightGray" SelectionChanged="SearchResults_SelectionChanged">
                     <ListBox.Resources>
-                        <common:SearchResultsConverter x:Key="SearchResultsConverter" />
+                        <converters:SearchResultsConverter x:Key="SearchResultsConverter" />
 
                         <Style TargetType="Border">
                             <Setter Property="CornerRadius" Value="3"/>

@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace SA2MsgTextEditor.UI
+namespace SA2MsgTextEditor.UI.Elements
 {
     public class DataGridLimitedTextLengthColumn : DataGridTextColumn
     {

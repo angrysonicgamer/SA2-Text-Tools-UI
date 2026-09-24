@@ -1,6 +1,4 @@
 ﻿using SA2EventTextEditor.Common;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;

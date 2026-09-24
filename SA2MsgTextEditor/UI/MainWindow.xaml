@@ -6,7 +6,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:common="clr-namespace:SA2MsgTextEditor.Common"
-        xmlns:ui="clr-namespace:SA2MsgTextEditor.UI"
+        xmlns:converters="clr-namespace:SA2MsgTextEditor.UI.Converters"
+        xmlns:uielements="clr-namespace:SA2MsgTextEditor.UI.Elements"
         mc:Ignorable="d"
         Title="{DynamicResource MainWindow.Title}"
         Width="960" MinWidth="800"
@@ -99,7 +100,7 @@
             <!-- Message groups (with multiple text blocks or grouped by piece for hunting stages) -->
             <ListBox x:Name="ListGroupedMessages" Grid.Column="0" Width="320" Margin="10" HorizontalAlignment="Left" BorderBrush="LightGray" SelectionChanged="ListGroupedMessages_SelectionChanged">
                 <ListBox.Resources>
-                    <common:GroupNamesConverter x:Key="GroupNamesConverter" />
+                    <converters:GroupNamesConverter x:Key="GroupNamesConverter" />
 
                     <Style TargetType="Border">
                         <Setter Property="CornerRadius" Value="3"/>
@@ -125,8 +126,8 @@
                           BorderBrush="LightGray" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray" SelectionChanged="MessagesList_SelectionChanged">
 
                     <DataGrid.Resources>
-                        <common:TextCenteringNameConverter x:Key="TextCenteringNameConverter" />
-                        <common:TextCenteringDescriptionConverter x:Key="TextCenteringDescriptionConverter" />
+                        <converters:TextCenteringNameConverter x:Key="TextCenteringNameConverter" />
+                        <converters:TextCenteringDescriptionConverter x:Key="TextCenteringDescriptionConverter" />
 
                         <ObjectDataProvider x:Key="TextCenteringEnumValues" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
                             <ObjectDataProvider.MethodParameters>
@@ -188,28 +189,28 @@
 
                     <DataGrid.Columns>
                         <!-- Voice -->
-                        <ui:DataGridNumericColumn
+                        <uielements:DataGridNumericColumn
                             x:Name="ColumnVoice" MinWidth="50" CanUserSort="False"
                             HeaderStyle="{StaticResource CenteredHeader}"
                             Binding="{Binding Voice, UpdateSourceTrigger=PropertyChanged}"
                             ElementStyle="{StaticResource NumericTextAlignment}"
                             EditingElementStyle="{StaticResource NumericBoxAlignment}">
-                            <ui:DataGridNumericColumn.Header>
+                            <uielements:DataGridNumericColumn.Header>
                                 <TextBlock Text="{DynamicResource SA2Message.Voice}" ToolTip="{DynamicResource SA2Message.Voice.Description}" />
-                            </ui:DataGridNumericColumn.Header>
-                        </ui:DataGridNumericColumn>
+                            </uielements:DataGridNumericColumn.Header>
+                        </uielements:DataGridNumericColumn>
 
                         <!-- Frame count -->
-                        <ui:DataGridNumericColumn
+                        <uielements:DataGridNumericColumn
                             x:Name="ColumnFrameCount" MinWidth="50" CanUserSort="False"
                             HeaderStyle="{StaticResource CenteredHeader}"
                             Binding="{Binding FrameCount, UpdateSourceTrigger=PropertyChanged}"
                             ElementStyle="{StaticResource NumericTextAlignment}"
                             EditingElementStyle="{StaticResource NumericBoxAlignment}">
-                            <ui:DataGridNumericColumn.Header>
+                            <uielements:DataGridNumericColumn.Header>
                                 <TextBlock Text="{DynamicResource SA2Message.FrameCount}" ToolTip="{DynamicResource SA2Message.FrameCount.Description}" />
-                            </ui:DataGridNumericColumn.Header>
-                        </ui:DataGridNumericColumn>
+                            </uielements:DataGridNumericColumn.Header>
+                        </uielements:DataGridNumericColumn>
 
                         <!-- Is 2P piece -->
                         <DataGridCheckBoxColumn
@@ -268,14 +269,14 @@
                         </DataGridTextColumn>
 
                         <!-- Chao names -->
-						<ui:DataGridLimitedTextLengthColumn
+						<uielements:DataGridLimitedTextLengthColumn
                             x:Name="ColumnChaoNames" Width="*" MinWidth="320" CanUserSort="False" Visibility="Hidden"
                             Binding="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
                             ElementStyle="{StaticResource TextBoxAlignment}">
-                            <ui:DataGridLimitedTextLengthColumn.Header>
+                            <uielements:DataGridLimitedTextLengthColumn.Header>
                                 <TextBlock Text="{DynamicResource SA2Message.ChaoNames}" ToolTip="{DynamicResource SA2Message.ChaoNames.Description}" />
-                            </ui:DataGridLimitedTextLengthColumn.Header>
-                        </ui:DataGridLimitedTextLengthColumn>
+                            </uielements:DataGridLimitedTextLengthColumn.Header>
+                        </uielements:DataGridLimitedTextLengthColumn>
                     </DataGrid.Columns>
                 </DataGrid>
 

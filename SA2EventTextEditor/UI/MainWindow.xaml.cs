@@ -2,7 +2,6 @@
 using SA2EventTextEditor.Common;
 using SA2EventTextEditor.Extensions;
 using SA2EventTextEditor.JSON;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Text;

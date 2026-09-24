@@ -16,26 +16,19 @@ namespace SA2EventTextEditor.Common
         public int? Character
         {
             get { return _character; }
-            set { _character = value.HasValue ? value : -1; OnPropertyChanged(nameof(Character)); }
+            set { _character = value.HasValue ? value : -1; OnPropertyChanged(); }
         }
 
         public TextCentering TextCentering
         {
             get { return _centering; }
-            set { _centering = value; OnPropertyChanged(nameof(TextCentering)); }
+            set { _centering = value; OnPropertyChanged(); }
         }
         public string? Text
         {
             get { return _text; }
-            set { _text = value?.Replace(Environment.NewLine, "\n"); OnPropertyChanged(nameof(Text)); }
-        }
-
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-        public void OnPropertyChanged([CallerMemberName] string prop = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
-        }
+            set { _text = value?.Replace(Environment.NewLine, "\n"); OnPropertyChanged(); }
+        }        
 
 
         [JsonConstructor]
@@ -48,6 +41,9 @@ namespace SA2EventTextEditor.Common
             Text = text;
         }
 
+        
+        // Methods
+        
         public void Read(BinaryReader reader, Encoding encoding, Endianness endianness)
         {
             Character = reader.ReadInt32(endianness);
@@ -73,6 +69,15 @@ namespace SA2EventTextEditor.Common
                 return TextCentering.All;
 
             return TextCentering.None;
+        }
+
+
+        // Property changed
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+        public void OnPropertyChanged([CallerMemberName] string prop = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
     }
 }

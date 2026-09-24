@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:common="clr-namespace:SA2EventTextEditor.Common"
-        xmlns:ui="clr-namespace:SA2EventTextEditor.UI"
+        xmlns:converters="clr-namespace:SA2EventTextEditor.UI.Converters"
+        xmlns:uielements="clr-namespace:SA2EventTextEditor.UI.Elements"
         mc:Ignorable="d"
         Title="{DynamicResource MainWindow.Title}"
         Width="960" MinWidth="800"
@@ -99,7 +100,7 @@
             <!-- Event IDs-->
             <ListBox x:Name="Events" Grid.Column="0" Width="320" Margin="10" HorizontalAlignment="Left" BorderBrush="LightGray" SelectionChanged="Events_SelectionChanged">
                 <ListBox.Resources>
-                    <common:SA2EventNamesConverter x:Key="EventNamesConverter" />
+                    <converters:SA2EventNamesConverter x:Key="EventNamesConverter" />
 
                     <Style TargetType="Border">
                         <Setter Property="CornerRadius" Value="3"/>
@@ -125,8 +126,8 @@
                           BorderBrush="LightGray" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray" SelectionChanged="EventMessages_SelectionChanged">
 
                     <DataGrid.Resources>
-                        <common:TextCenteringNameConverter x:Key="TextCenteringNameConverter" />
-                        <common:TextCenteringDescriptionConverter x:Key="TextCenteringDescriptionConverter" />
+                        <converters:TextCenteringNameConverter x:Key="TextCenteringNameConverter" />
+                        <converters:TextCenteringDescriptionConverter x:Key="TextCenteringDescriptionConverter" />
 
                         <ObjectDataProvider x:Key="TextCenteringEnumValues" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
                             <ObjectDataProvider.MethodParameters>
@@ -180,16 +181,16 @@
 
                     <DataGrid.Columns>                        
                         <!-- Character -->
-                        <ui:DataGridNumericColumn
+                        <uielements:DataGridNumericColumn
                             MinWidth="30" MaxWidth="150" CanUserSort="False"
                             Binding="{Binding Character, UpdateSourceTrigger=PropertyChanged, TargetNullValue={x:Static sys:String.Empty}}"
                             HeaderStyle="{StaticResource CenteredHeader}"
                             ElementStyle="{StaticResource NumericTextAlignment}"
                             EditingElementStyle="{StaticResource NumericBoxAlignment}">
-                            <ui:DataGridNumericColumn.Header>
+                            <uielements:DataGridNumericColumn.Header>
                                 <TextBlock Text="{DynamicResource Character}" ToolTip="{DynamicResource Character.Description}" />
-                            </ui:DataGridNumericColumn.Header>
-                        </ui:DataGridNumericColumn>
+                            </uielements:DataGridNumericColumn.Header>
+                        </uielements:DataGridNumericColumn>
 
                         <!-- Text centering -->
                         <DataGridTemplateColumn MinWidth="50" MaxWidth="150" CanUserSort="False" HeaderStyle="{StaticResource CenteredHeader}">

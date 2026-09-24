@@ -1,4 +1,5 @@
-﻿using SA2EventTextEditor.Common;
+﻿using SA2EventTextEditor.Config;
+using SA2EventTextEditor.Common;
 using System.Text;
 using System.Windows;
 

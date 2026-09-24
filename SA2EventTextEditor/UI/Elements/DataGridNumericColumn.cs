@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace SA2EventTextEditor.UI
+namespace SA2EventTextEditor.UI.Elements
 {
     public class DataGridNumericColumn : DataGridTextColumn
     {

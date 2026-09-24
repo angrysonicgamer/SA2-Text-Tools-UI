@@ -1,4 +1,5 @@
 ﻿using SA2MsgTextEditor.Common;
+using SA2MsgTextEditor.Config;
 using System.Text;
 using System.Windows;
 
