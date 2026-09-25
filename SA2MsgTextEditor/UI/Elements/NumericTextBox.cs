@@ -4,14 +4,13 @@ using System.Windows.Input;
 
 namespace SA2MsgTextEditor.UI.Elements
 {
-    public class DataGridNumericColumn : DataGridTextColumn
+    public class NumericTextBox : TextBox
     {
-        protected override object PrepareCellForEdit(FrameworkElement editingElement, RoutedEventArgs editingEventArgs)
+        public override void OnApplyTemplate()
         {
-            var edit = editingElement as TextBox;
-            edit.PreviewTextInput += Edit_PreviewTextInput;
-            DataObject.AddPastingHandler(edit, OnPaste);
-            return base.PrepareCellForEdit(editingElement, editingEventArgs);
+            base.OnApplyTemplate();
+            DataObject.AddPastingHandler(this, OnPaste);
+            PreviewTextInput += OnPreviewTextInput;
         }
 
         private void OnPaste(object sender, DataObjectPastingEventArgs e)
@@ -24,7 +23,7 @@ namespace SA2MsgTextEditor.UI.Elements
             }
         }
 
-        private void Edit_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        private void OnPreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             e.Handled = !IsDataValid(e.Text);
         }

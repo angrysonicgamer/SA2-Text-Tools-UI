@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:localui="clr-namespace:SA2EventTextEditor.UI"
+        xmlns:uielements="clr-namespace:SA2EventTextEditor.UI.Elements"
         mc:Ignorable="d"
         Title="{DynamicResource EnterCustomCodepage.Title}"
         Width="240" Height="180"
@@ -23,7 +23,7 @@
             <Setter Property="Height" Value="25" />
             <Setter Property="BorderBrush" Value="DarkGray" />
         </Style>
-        <Style TargetType="TextBox">
+        <Style TargetType="uielements:NumericTextBox">
             <Style.Resources>
                 <Style TargetType="Border">
                     <Setter Property="CornerRadius" Value="2" />
@@ -34,8 +34,7 @@
 
     <GroupBox Header="{DynamicResource EnterCustomCodepage.Text}" Margin="10">
         <StackPanel Orientation="Vertical" VerticalAlignment="Center">
-            <TextBox x:Name="CustomCodepage" FontSize="14" Width="120" Height="25" TextAlignment="Center" VerticalContentAlignment="Center"
-                     PreviewTextInput="CustomCodepage_PreviewTextInput" DataObject.Pasting="CustomCodepage_Pasting" KeyUp="CustomCodepage_KeyUp" />
+            <uielements:NumericTextBox x:Name="CustomCodepage" FontSize="14" Width="120" Height="25" TextAlignment="Center" VerticalContentAlignment="Center" KeyUp="CustomCodepage_KeyUp" />
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
                 <Button x:Name="ButtonOK" Content="{DynamicResource EnterCustomCodepage.OK}" Width="70" Margin="0,0,20,0" Click="ButtonOK_Click" />
                 <Button x:Name="ButtonCancel" Content="{DynamicResource EnterCustomCodepage.Cancel}" Width="70" Click="ButtonCancel_Click" />
