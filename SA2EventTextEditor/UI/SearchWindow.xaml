@@ -7,45 +7,50 @@
         xmlns:converters="clr-namespace:SA2EventTextEditor.UI.Converters"
         mc:Ignorable="d"
         Title="{DynamicResource Search.Title}"
+        FocusManager.FocusedElement="{Binding ElementName=SearchString}"
         Width="640" Height="480"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         Loaded="WindowSearch_Loaded"
-        KeyUp="WindowSearch_KeyUp">
+        Closing="WindowSearch_Closing">
     
     <Window.Resources>
         <Style x:Key="DefaultButton" TargetType="Button">
-            <Style.Resources>
-                <Style TargetType="Border">
-                    <Setter Property="CornerRadius" Value="2"/>
-                </Style>
-            </Style.Resources>
-
             <Setter Property="FontSize" Value="14" />
             <Setter Property="Height" Value="25" />
-            <Setter Property="BorderBrush" Value="DarkGray" />            
-        </Style>
-        <Style x:Key="DisableOnEmptySearch" TargetType="Button">
+            <Setter Property="BorderBrush" Value="DarkGray" />
             <Style.Resources>
                 <Style TargetType="Border">
                     <Setter Property="CornerRadius" Value="2"/>
                 </Style>
-            </Style.Resources>
-
+            </Style.Resources>                        
+        </Style>
+        
+        <Style x:Key="DisableOnEmptySearch" TargetType="Button">
             <Setter Property="FontSize" Value="14" />
             <Setter Property="Height" Value="25" />
             <Setter Property="BorderBrush" Value="DarkGray" />
             <Setter Property="IsEnabled" Value="True" />
+            <Style.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="2"/>
+                </Style>
+            </Style.Resources>
             <Style.Triggers>
                 <DataTrigger Binding="{Binding Text, ElementName=SearchString, TargetNullValue=''}" Value="{x:Static sys:String.Empty}">
                     <Setter Property="IsEnabled" Value="False" />
                 </DataTrigger>
             </Style.Triggers>
         </Style>
+        
         <Style TargetType="TextBox">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="TextAlignment" Value="Left" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="BorderBrush" Value="DarkGray" />
             <Style.Resources>
                 <Style TargetType="Border">
-                    <Setter Property="CornerRadius" Value="2" />
+                    <Setter Property="CornerRadius" Value="3" />
                 </Style>
             </Style.Resources>
         </Style>
@@ -57,36 +62,50 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
+        <!-- User input -->
         <StackPanel Grid.Column="0" Orientation="Vertical" VerticalAlignment="Top" Margin="10">            
-            <StackPanel Orientation="Horizontal">
-                <TextBlock x:Name="FindWhat" Text="{DynamicResource Search.FindWhat}" VerticalAlignment="Center" />                
-                <TextBox x:Name="SearchString" FontSize="14" Width="210" Height="25" TextAlignment="Left" VerticalContentAlignment="Center" Margin="10,0,0,0" KeyUp="SearchString_KeyUp" />
+            <!-- Search string -->
+            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                <TextBlock x:Name="FindWhat" Text="{DynamicResource Search.FindWhat}" VerticalAlignment="Center" />
+                <TextBox x:Name="SearchString" Text="{Binding LastSearchString}" Width="210" Height="25" Margin="10,0,0,0" KeyUp="SearchString_KeyUp" />
             </StackPanel>
-            <StackPanel Orientation="Vertical" HorizontalAlignment="Left" Margin="0,20,0,0">
-                <CheckBox x:Name="IgnoreCase" Content="{DynamicResource Search.IgnoreCase}" Checked="IgnoreCase_Checked" Unchecked="IgnoreCase_Unchecked" />
-                <Button x:Name="ButtonFind" Content="{DynamicResource Button.Find}" Style="{StaticResource DisableOnEmptySearch}" Width="150" Margin="0,50,0,0" Click="ButtonFind_Click" />
+            
+            <!-- Ignore case option -->
+            <CheckBox x:Name="IgnoreCase" Content="{DynamicResource Search.IgnoreCase}" Margin="0,20,0,0" Checked="IgnoreCase_Checked" Unchecked="IgnoreCase_Unchecked" />
+            
+            <!-- Find/Close buttons -->
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Left" Margin="0,50,0,0">                
+                <Button x:Name="ButtonFind" Content="{DynamicResource Button.Find}" Style="{StaticResource DisableOnEmptySearch}" Width="150" Click="ButtonFind_Click" />
                 <Button x:Name="ButtonClose" Content="{DynamicResource Button.Close}" Style="{StaticResource DefaultButton}" Width="150" Margin="0,20,0,0" Click="ButtonClose_Click" />
             </StackPanel>
         </StackPanel>
 
-        <GroupBox Grid.Column="1" Header="{DynamicResource Search.Results}" Margin="10">
-            <Grid Margin="10">
+        <!-- Search results -->
+        <GroupBox Grid.Column="1" Margin="10">
+            <GroupBox.Header>
+                <TextBlock Text="{DynamicResource Search.Results}" FontWeight="DemiBold" />
+            </GroupBox.Header>
+            
+            <Grid>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 
-                <StackPanel Grid.Row="0" Orientation="Horizontal">                    
+                <!-- Search results count -->
+                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10">                    
                     <TextBlock x:Name="ResultsCount" Text="{DynamicResource Search.ResultsCount}" />
-                    <TextBlock x:Name="ResultsCountNumber" Text="0" Margin="5,0,0,10"/>
+                    <TextBlock x:Name="ResultsCountNumber" Text="{Binding SearchResults.Count, FallbackValue=0}" Margin="5,0,0,0"/>
                 </StackPanel>
-                <ListBox x:Name="SearchResultsList" Grid.Row="1" BorderBrush="LightGray" SelectionChanged="SearchResults_SelectionChanged">
+
+                <Separator Grid.Row="1" BorderBrush="LightGray" BorderThickness="1" />
+
+                <!-- Search results list -->
+                <ListBox Grid.Row="2" x:Name="SearchResultsList" ItemsSource="{Binding SearchResults}"
+                         BorderBrush="Transparent" Margin="10" SelectionChanged="SearchResults_SelectionChanged">
                     <ListBox.Resources>
                         <converters:SearchResultsConverter x:Key="SearchResultsConverter" />
-
-                        <Style TargetType="Border">
-                            <Setter Property="CornerRadius" Value="3"/>
-                        </Style>
                     </ListBox.Resources>
 
                     <ListBox.ItemTemplate>

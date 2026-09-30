@@ -1,38 +1,40 @@
 ﻿using SA2EventTextEditor.Extensions;
-using System.ComponentModel;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json.Serialization;
 
 namespace SA2EventTextEditor.Common
 {
-    public class SA2EventMessage : INotifyPropertyChanged
+    public class SA2EventMessage : PropertyChangedNotifier
     {
         private int? _character;
         private TextCentering _centering;
         private string? _text;
+
         
         public int? Character
         {
             get { return _character; }
-            set { _character = value.HasValue ? value : -1; OnPropertyChanged(); }
+            set { _character = value.HasValue ? value.Value : -1; NotifyPropertyChanged(); }
         }
 
         public TextCentering TextCentering
         {
             get { return _centering; }
-            set { _centering = value; OnPropertyChanged(); }
+            set { _centering = value; NotifyPropertyChanged(); }
         }
         public string? Text
         {
             get { return _text; }
-            set { _text = value?.Replace(Environment.NewLine, "\n"); OnPropertyChanged(); }
+            set { _text = value?.Replace(Environment.NewLine, "\n"); NotifyPropertyChanged(); }
         }        
 
 
         [JsonConstructor]
-        public SA2EventMessage() { }
+        public SA2EventMessage()
+        {
+            Character = -1;
+        }
 
         public SA2EventMessage(int character, TextCentering centering, string text)
         {
@@ -69,15 +71,6 @@ namespace SA2EventTextEditor.Common
                 return TextCentering.All;
 
             return TextCentering.None;
-        }
-
-
-        // Property changed
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-        public void OnPropertyChanged([CallerMemberName] string prop = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
     }
 }

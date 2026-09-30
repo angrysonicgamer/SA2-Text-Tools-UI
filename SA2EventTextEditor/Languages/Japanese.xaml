@@ -4,7 +4,7 @@
     xmlns:system="clr-namespace:System;assembly=mscorlib">
 
     <!-- #region UI -->
-    <system:String x:Key="MainWindow.Title">ソニアド2 イベントテキストエディター</system:String>	
+    <system:String x:Key="App.Title">ソニアド2 イベントテキストエディター</system:String>	
 
     <!-- Menu -->
     <system:String x:Key="Menu.File">ファイル(_F)</system:String>
@@ -39,9 +39,14 @@
     <system:String x:Key="Filters.PRS">ソニアド２のイベントテキストファイル|evmes*.prs</system:String>
     <system:String x:Key="Filters.JSON">JSONファイル|*.json</system:String>
 
+    <!-- Editor -->
+    <system:String x:Key="Editor.EventList">イベントリスト</system:String>
+    <system:String x:Key="Editor.MessageList">メッセージリスト</system:String>
+
     <!-- Custom codepage input -->
     <system:String x:Key="EnterCustomCodepage.Title">コードページ</system:String>
     <system:String x:Key="EnterCustomCodepage.Text">カスタムコードページを入力してください</system:String>
+    <system:String x:Key="EnterCustomCodepage.Tooltip">上下キーを使用できます</system:String>
     <system:String x:Key="EnterCustomCodepage.OK">OK</system:String>
     <system:String x:Key="EnterCustomCodepage.Cancel">キャンセル</system:String>
 
@@ -58,10 +63,10 @@
     <!-- Status bar -->
     <system:String x:Key="Status.FileMode.PRS">ゲームファイル (PRS)</system:String>
     <system:String x:Key="Status.FileMode.JSON">JSONファイルインポート</system:String>
-    <system:String x:Key="Status.EventID">イベントID</system:String>
-    <system:String x:Key="Status.SelectedItem">選択されたアイテム</system:String>
-    <system:String x:Key="Status.SelectedItem.None">選択されたアイテム: なし</system:String>
-    <system:String x:Key="Status.TotalItems">アイテム数</system:String>
+    <system:String x:Key="Status.EventID">イベントID:</system:String>
+    <system:String x:Key="Status.SelectedItem">選択されたアイテム:</system:String>
+    <system:String x:Key="Status.SelectedItem.None">なし</system:String>
+    <system:String x:Key="Status.TotalItems">アイテム数:</system:String>
     <system:String x:Key="Status.Endianness.Auto">オート</system:String>
     <system:String x:Key="Status.Endianness.BigEndian">Big Endian</system:String>
     <system:String x:Key="Status.Endianness.LittleEndian">Little Endian</system:String>

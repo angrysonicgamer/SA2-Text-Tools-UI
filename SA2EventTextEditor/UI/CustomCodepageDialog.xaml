@@ -8,33 +8,41 @@
         Title="{DynamicResource EnterCustomCodepage.Title}"
         Width="240" Height="180"
         WindowStartupLocation="CenterScreen"
-        ResizeMode="NoResize"
-        Loaded="WindowCustomCodepage_Loaded">
+        ResizeMode="NoResize">
 
     <Window.Resources>
         <Style TargetType="Button">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Height" Value="25" />
+            <Setter Property="BorderBrush" Value="DarkGray" />
             <Style.Resources>
                 <Style TargetType="Border">
                     <Setter Property="CornerRadius" Value="2"/>
                 </Style>
             </Style.Resources>
-
-            <Setter Property="FontSize" Value="14" />
-            <Setter Property="Height" Value="25" />
-            <Setter Property="BorderBrush" Value="DarkGray" />
         </Style>
+        
         <Style TargetType="uielements:NumericTextBox">
+            <Setter Property="BorderBrush" Value="DarkGray" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
             <Style.Resources>
                 <Style TargetType="Border">
-                    <Setter Property="CornerRadius" Value="2" />
+                    <Setter Property="CornerRadius" Value="3" />
                 </Style>
             </Style.Resources>
         </Style>
     </Window.Resources>
 
-    <GroupBox Header="{DynamicResource EnterCustomCodepage.Text}" Margin="10">
+    <GroupBox BorderBrush="LightGray" Margin="10">
+        <GroupBox.Header>
+            <TextBlock Text="{DynamicResource EnterCustomCodepage.Text}" FontWeight="DemiBold" />
+        </GroupBox.Header>
+        
         <StackPanel Orientation="Vertical" VerticalAlignment="Center">
-            <uielements:NumericTextBox x:Name="CustomCodepage" FontSize="14" Width="120" Height="25" TextAlignment="Center" VerticalContentAlignment="Center" KeyUp="CustomCodepage_KeyUp" />
+            <uielements:NumericTextBox x:Name="CustomCodepage" Text="{Binding Codepage}" ToolTip="{DynamicResource EnterCustomCodepage.Tooltip}" Width="120" Height="25" KeyUp="CustomCodepage_KeyUp" />
+            
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
                 <Button x:Name="ButtonOK" Content="{DynamicResource EnterCustomCodepage.OK}" Width="70" Margin="0,0,20,0" Click="ButtonOK_Click" />
                 <Button x:Name="ButtonCancel" Content="{DynamicResource EnterCustomCodepage.Cancel}" Width="70" Click="ButtonCancel_Click" />

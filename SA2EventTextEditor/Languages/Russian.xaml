@@ -4,7 +4,7 @@
     xmlns:system="clr-namespace:System;assembly=mscorlib">
 
 	<!-- #region UI -->
-    <system:String x:Key="MainWindow.Title">Редактор текста катсцен SA2</system:String>    
+    <system:String x:Key="App.Title">Редактор текста катсцен SA2</system:String>    
     
     <!-- Menu -->
 	<system:String x:Key="Menu.File">_Файл</system:String>
@@ -39,9 +39,14 @@
     <system:String x:Key="Filters.PRS">Файлы текста катсцен SA2|evmes*.prs</system:String>
     <system:String x:Key="Filters.JSON">Файлы JSON|*.json</system:String>
 
+    <!-- Editor -->
+    <system:String x:Key="Editor.EventList">Список сцен</system:String>
+    <system:String x:Key="Editor.MessageList">Список текстовых строк</system:String>
+
     <!-- Custom codepage input -->
     <system:String x:Key="EnterCustomCodepage.Title">Кодировка</system:String>
     <system:String x:Key="EnterCustomCodepage.Text">Введите номер кодировки</system:String>
+    <system:String x:Key="EnterCustomCodepage.Tooltip">Вы можете использовать клавиши ВВЕРХ/ВНИЗ</system:String>
     <system:String x:Key="EnterCustomCodepage.OK">OK</system:String>
     <system:String x:Key="EnterCustomCodepage.Cancel">Отмена</system:String>
 
@@ -58,10 +63,10 @@
     <!-- Status bar -->
     <system:String x:Key="Status.FileMode.PRS">Игровой файл (PRS)</system:String>
     <system:String x:Key="Status.FileMode.JSON">Импорт JSON</system:String>
-    <system:String x:Key="Status.EventID">ID сцены</system:String>
-    <system:String x:Key="Status.SelectedItem">Выбранный элемент</system:String>
-    <system:String x:Key="Status.SelectedItem.None">Выбранный элемент: нет</system:String>
-    <system:String x:Key="Status.TotalItems">Всего элементов</system:String>
+    <system:String x:Key="Status.EventID">ID сцены:</system:String>
+    <system:String x:Key="Status.SelectedItem">Выбранный элемент:</system:String>
+    <system:String x:Key="Status.SelectedItem.None">нет</system:String>
+    <system:String x:Key="Status.TotalItems">Всего элементов:</system:String>
     <system:String x:Key="Status.Endianness.Auto">Авто</system:String>
     <system:String x:Key="Status.Endianness.BigEndian">Big Endian</system:String>
     <system:String x:Key="Status.Endianness.LittleEndian">Little Endian</system:String>

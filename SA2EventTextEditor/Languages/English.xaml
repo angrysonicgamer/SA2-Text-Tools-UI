@@ -4,7 +4,7 @@
     xmlns:system="clr-namespace:System;assembly=mscorlib">
 
     <!-- #region UI -->
-    <system:String x:Key="MainWindow.Title">SA2 Event Text Editor</system:String>    
+    <system:String x:Key="App.Title">SA2 Event Text Editor</system:String>    
 
     <!-- Menu -->
     <system:String x:Key="Menu.File">_File</system:String>
@@ -38,10 +38,15 @@
     <!-- File filters -->
     <system:String x:Key="Filters.PRS">SA2 event text files|evmes*.prs</system:String>
     <system:String x:Key="Filters.JSON">JSON files|*.json</system:String>
+    
+    <!-- Editor -->
+    <system:String x:Key="Editor.EventList">Event list</system:String>
+    <system:String x:Key="Editor.MessageList">Message list</system:String>
 
     <!-- Custom codepage input -->
     <system:String x:Key="EnterCustomCodepage.Title">Codepage</system:String>
     <system:String x:Key="EnterCustomCodepage.Text">Enter custom codepage</system:String>
+    <system:String x:Key="EnterCustomCodepage.Tooltip">You can use UP/DOWN arrow keys</system:String>
     <system:String x:Key="EnterCustomCodepage.OK">OK</system:String>
     <system:String x:Key="EnterCustomCodepage.Cancel">Cancel</system:String>
     
@@ -58,10 +63,10 @@
     <!-- Status bar -->
     <system:String x:Key="Status.FileMode.PRS">Game file (PRS)</system:String>
     <system:String x:Key="Status.FileMode.JSON">Import JSON</system:String>
-    <system:String x:Key="Status.EventID">Event ID</system:String>
-    <system:String x:Key="Status.SelectedItem">Selected item</system:String>
-    <system:String x:Key="Status.SelectedItem.None">Selected item: none</system:String>
-    <system:String x:Key="Status.TotalItems">Total items</system:String>
+    <system:String x:Key="Status.EventID">Event ID:</system:String>
+    <system:String x:Key="Status.SelectedItem">Selected item:</system:String>
+    <system:String x:Key="Status.SelectedItem.None">none</system:String>
+    <system:String x:Key="Status.TotalItems">Total items:</system:String>
     <system:String x:Key="Status.Endianness.Auto">Auto</system:String>
     <system:String x:Key="Status.Endianness.BigEndian">Big Endian</system:String>
     <system:String x:Key="Status.Endianness.LittleEndian">Little Endian</system:String>    

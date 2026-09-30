@@ -47,6 +47,8 @@ namespace SA2EventTextEditor.Common
 
     public enum OpenFileMode
     {
+        NoFile,
+        
         [Display(Name = "Status.FileMode.PRS")]
         OpenPRS,
 

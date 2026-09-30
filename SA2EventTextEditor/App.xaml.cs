@@ -2,6 +2,7 @@
 using SA2EventTextEditor.Common;
 using System.Text;
 using System.Windows;
+using SA2EventTextEditor.VM;
 
 namespace SA2EventTextEditor
 {
@@ -10,9 +11,8 @@ namespace SA2EventTextEditor
     /// </summary>
     public partial class App : Application
     {
-        public static AppConfig Config = new AppConfig();
-        public static SA2EventFile? SA2Event { get; set; }
-        public static string? LastSearchText { get; set; }
+        public static AppConfig Config { get; set; } = new AppConfig();
+        public static AppViewModel VM { get; set; } = new AppViewModel();
 
         public static string GetString(string key)
         {
@@ -44,6 +44,7 @@ namespace SA2EventTextEditor
         protected override void OnStartup(StartupEventArgs e)
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            ShutdownMode = ShutdownMode.OnMainWindowClose;
             Config.Read();
             SetLanguage(Config.Settings.Language);
             base.OnStartup(e);

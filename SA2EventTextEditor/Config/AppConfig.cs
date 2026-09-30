@@ -9,8 +9,8 @@ namespace SA2EventTextEditor.Config
     {
         private readonly string _configFile = "AppConfig.json";
 
-        public Settings Settings { get; set; }
-        public Search Search { get; set; }
+        public Settings Settings { get; set; } = new Settings();
+        public Search Search { get; set; } = new Search();
         
 
         [JsonConstructor]
@@ -19,9 +19,6 @@ namespace SA2EventTextEditor.Config
 
         public void Read()
         {
-            Settings = new();
-            Search = new();
-
             if (File.Exists(_configFile))
             {
                 var buffer = Json.Import<AppConfig>(_configFile);                

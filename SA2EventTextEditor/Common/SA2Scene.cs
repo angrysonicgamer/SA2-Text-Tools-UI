@@ -3,10 +3,22 @@ using System.Text.Json.Serialization;
 
 namespace SA2EventTextEditor.Common
 {
-    public class SA2Scene
+    public class SA2Scene : PropertyChangedNotifier
     {
-        public int EventID { get; set; }
-        public ObservableCollection<SA2EventMessage> Messages { get; set; }
+        private int _eventID;
+        private ObservableCollection<SA2EventMessage> _messages;
+
+
+        public int EventID
+        {
+            get => _eventID;
+            set { _eventID = value; NotifyPropertyChanged(); }
+        }
+        public ObservableCollection<SA2EventMessage> Messages
+        {
+            get => _messages;
+            set { _messages = value; NotifyPropertyChanged(); }
+        }
 
 
         [JsonConstructor]
