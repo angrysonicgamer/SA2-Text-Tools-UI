@@ -63,16 +63,25 @@ namespace SA2EventTextEditor.UI
 
         // "Ignore case" checkbox
 
+        private void SetIgnoreCase(bool value)
+        {
+            IgnoreCase.IsChecked = value;
+
+            if (IgnoreCase.IsChecked != App.Config.Search.IgnoreCase)
+            {
+                App.Config.Search.IgnoreCase = IgnoreCase.IsChecked.Value;
+                App.Config.Save();
+            }
+        }
+        
         private void IgnoreCase_Checked(object sender, RoutedEventArgs e)
         {
-            IgnoreCase.IsChecked = App.Config.Search.IgnoreCase = true;
-            App.Config.Save();
+            SetIgnoreCase(true);
         }
 
         private void IgnoreCase_Unchecked(object sender, RoutedEventArgs e)
         {
-            IgnoreCase.IsChecked = App.Config.Search.IgnoreCase = false;
-            App.Config.Save();
+            SetIgnoreCase(false);
         }
 
 

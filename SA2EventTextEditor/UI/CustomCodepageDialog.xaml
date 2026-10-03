@@ -4,6 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:uielements="clr-namespace:SA2EventTextEditor.UI.Elements"
+        xmlns:vm="clr-namespace:SA2EventTextEditor.VM"
+        d:DataContext="{d:DesignInstance Type=vm:AppViewModel}"
         mc:Ignorable="d"
         Title="{DynamicResource EnterCustomCodepage.Title}"
         Width="240" Height="180"

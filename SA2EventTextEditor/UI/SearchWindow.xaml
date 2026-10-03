@@ -5,6 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:converters="clr-namespace:SA2EventTextEditor.UI.Converters"
+        xmlns:vm="clr-namespace:SA2EventTextEditor.VM"
+        d:DataContext="{d:DesignInstance Type=vm:AppViewModel}"
         mc:Ignorable="d"
         Title="{DynamicResource Search.Title}"
         FocusManager.FocusedElement="{Binding ElementName=SearchString}"
@@ -23,7 +25,7 @@
                 <Style TargetType="Border">
                     <Setter Property="CornerRadius" Value="2"/>
                 </Style>
-            </Style.Resources>                        
+            </Style.Resources>
         </Style>
         
         <Style x:Key="DisableOnEmptySearch" TargetType="Button">
@@ -51,6 +53,14 @@
             <Style.Resources>
                 <Style TargetType="Border">
                     <Setter Property="CornerRadius" Value="3" />
+                </Style>
+            </Style.Resources>
+        </Style>
+
+        <Style TargetType="CheckBox">
+            <Style.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="2"/>
                 </Style>
             </Style.Resources>
         </Style>

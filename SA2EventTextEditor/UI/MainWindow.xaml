@@ -10,6 +10,8 @@
         xmlns:behaviors="clr-namespace:SA2EventTextEditor.UI.Behaviors"
         xmlns:converters="clr-namespace:SA2EventTextEditor.UI.Converters"
         xmlns:uielements="clr-namespace:SA2EventTextEditor.UI.Elements"
+        xmlns:vm="clr-namespace:SA2EventTextEditor.VM"
+        d:DataContext="{d:DesignInstance Type=vm:AppViewModel}"
         mc:Ignorable="d"
         Title="{Binding Title}"
         Width="960" MinWidth="800"

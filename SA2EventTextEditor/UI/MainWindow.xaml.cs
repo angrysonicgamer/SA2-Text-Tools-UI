@@ -117,7 +117,7 @@ namespace SA2EventTextEditor.UI
         {
             fileName = "";
             
-            var saveFileDialog = new SaveFileDialog() { DefaultExt = defaultExtension, FileName = App.VM.EventFile?.Name, Filter = App.GetString(filterResourceKey) };
+            var saveFileDialog = new SaveFileDialog() { DefaultExt = defaultExtension, FileName = App.VM.EventFile != null ? App.VM.EventFile.Name : "", Filter = App.GetString(filterResourceKey) };
             if (saveFileDialog.ShowDialog() == false) return false;
 
             fileName = saveFileDialog.FileName;

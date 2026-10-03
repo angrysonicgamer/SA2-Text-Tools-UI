@@ -66,10 +66,7 @@ namespace SA2EventTextEditor.VM
 
         #region Other properties
 
-        public string Title
-        {
-            get => EventFileLoaded ? $"{App.GetString("App.Title")} — {Path.GetFileName(FileName)}" : App.GetString("App.Title");
-        }
+        public string Title => EventFileLoaded ? $"{App.GetString("App.Title")} — {Path.GetFileName(FileName)}" : App.GetString("App.Title");
         public string EncodingAsString
         {
             get
@@ -78,34 +75,13 @@ namespace SA2EventTextEditor.VM
                 return App.Config.Settings.CustomCodepage.HasValue ? $"{encoding}: {App.Config.Settings.CustomCodepage.Value}" : encoding;
             }            
         }
-        public string EndiannessAsString
-        {
-            get => App.GetString(SelectedEndianness.GetDisplayName());
-        }
-        public bool EventFileLoaded
-        {
-            get => EventFile != null;
-        }
-        public string FileModeAsString
-        {
-            get => FileMode != OpenFileMode.NoFile ? App.GetString(FileMode.GetDisplayName()) : "";
-        }
-        public bool IsPRS
-        {
-            get => FileMode == OpenFileMode.OpenPRS;
-        }
-        public bool AnySceneIsSelected
-        {
-            get => SelectedScene != null;
-        }
-        public bool AnyMessageIsSelected
-        {
-            get => SelectedMessageIndex != -1;
-        }
-        public string SelectedMessageIndexAsString
-        {
-            get => AnyMessageIsSelected ? SelectedMessageIndex.ToString() : App.GetString("Status.SelectedItem.None");
-        }        
+        public string EndiannessAsString => App.GetString(SelectedEndianness.GetDisplayName());
+        public bool EventFileLoaded => EventFile != null;
+        public string FileModeAsString => FileMode != OpenFileMode.NoFile ? App.GetString(FileMode.GetDisplayName()) : "";
+        public bool IsPRS => FileMode == OpenFileMode.OpenPRS;
+        public bool AnySceneIsSelected => SelectedScene != null;
+        public bool AnyMessageIsSelected => SelectedMessageIndex != -1;
+        public string SelectedMessageIndexAsString => AnyMessageIsSelected ? SelectedMessageIndex.ToString() : App.GetString("Status.SelectedItem.None");
         public int Codepage { get; set; }
         public string? LastSearchString { get; set; }
 
