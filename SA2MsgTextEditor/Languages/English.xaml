@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:system="clr-namespace:System;assembly=mscorlib">
 
-    <system:String x:Key="MainWindow.Title">SA2 Message Text Editor</system:String>
+    <system:String x:Key="App.Title">SA2 Message Text Editor</system:String>
 
     <!-- Menu -->
     <system:String x:Key="Menu.File">_File</system:String>
@@ -35,19 +35,24 @@
     <system:String x:Key="Language.Japanese">日本語 (Japanese)</system:String>
 
     <!-- File filters -->
-    <system:String x:Key="Filters.PRS">
-		Supported files|eh*.prs;mh*.prs;ex_mission?.prs;mission?.prs;msg*.prs;text_?.prs;mcwarn_?.prs;msgalkinderfoname_?.prs
-		|Treasure hunting hint files|eh*.prs
-		|Gameplay message files|mh*.prs
-		|Other message files|ex_mission?.prs;mission?.prs;msg*.prs;text_?.prs;mcwarn_?.prs"
-		|Chao names file|msgalkinderfoname_?.prs
-		|All PRS files|*.prs
-	</system:String>
+    <system:String x:Key="Filters.PRS.Supported">Supported files|eh*.prs;mh*.prs;ex_mission?.prs;mission?.prs;msg*.prs;text_?.prs;mcwarn_?.prs;msgalkinderfoname_?.prs</system:String>
+    <system:String x:Key="Filters.PRS.Hunting">Treasure hunting hint files|eh*.prs</system:String>
+    <system:String x:Key="Filters.PRS.Gameplay">Gameplay message files|mh*.prs</system:String>
+    <system:String x:Key="Filters.PRS.Other">Other message files|ex_mission?.prs;mission?.prs;msg*.prs;text_?.prs;mcwarn_?.prs</system:String>
+    <system:String x:Key="Filters.PRS.Chao">Chao names file|msgalkinderfoname_?.prs</system:String>
+    <system:String x:Key="Filters.PRS.All">All PRS files|*.prs</system:String>
     <system:String x:Key="Filters.JSON">JSON files|*.json</system:String>
+
+    <!-- Editor -->
+    <system:String x:Key="Editor.GroupList">Group List</system:String>
+    <system:String x:Key="Editor.MessageList">Message List</system:String>
+    <system:String x:Key="Editor.EmeraldsList">Emeralds List</system:String>
+    <system:String x:Key="Editor.EmeraldHintsList">Emerald Hints</system:String>
 
     <!-- Custom codepage input -->
     <system:String x:Key="EnterCustomCodepage.Title">Codepage</system:String>
     <system:String x:Key="EnterCustomCodepage.Text">Enter custom codepage</system:String>
+    <system:String x:Key="EnterCustomCodepage.Tooltip">You can use UP/DOWN arrow keys</system:String>
     <system:String x:Key="EnterCustomCodepage.OK">OK</system:String>
     <system:String x:Key="EnterCustomCodepage.Cancel">Cancel</system:String>
 
@@ -64,10 +69,10 @@
     <system:String x:Key="Status.FileType.GameplayMessages">Omochao hints / gameplay messages</system:String>
     <system:String x:Key="Status.FileType.SimpleText">Simple text array</system:String>
     <system:String x:Key="Status.FileType.ChaoNames">Chao names</system:String>
-    <system:String x:Key="Status.SelectedGroup">Selected group</system:String>
-    <system:String x:Key="Status.SelectedItem">Selected item</system:String>
-    <system:String x:Key="Status.SelectedItem.None">Selected item: none</system:String>
-    <system:String x:Key="Status.TotalItems">Total items</system:String>
+    <system:String x:Key="Status.SelectedGroup">Selected group:</system:String>
+    <system:String x:Key="Status.SelectedItem">Selected item:</system:String>
+    <system:String x:Key="Status.SelectedItem.None">none</system:String>
+    <system:String x:Key="Status.TotalItems">Total items:</system:String>
     <system:String x:Key="Status.Endianness.Auto">Auto</system:String>
     <system:String x:Key="Status.Endianness.BigEndian">Big Endian</system:String>
     <system:String x:Key="Status.Endianness.LittleEndian">Little Endian</system:String>    

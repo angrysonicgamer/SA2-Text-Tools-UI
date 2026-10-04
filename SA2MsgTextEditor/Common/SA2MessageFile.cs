@@ -6,13 +6,18 @@ using System.Text.Json.Serialization;
 
 namespace SA2MsgTextEditor.Common
 {
-    public class SA2MessageFile
+    public class SA2MessageFile : PropertyChangedNotifier
     {
         private string _fileName;
+        private ObservableCollection<SA2MessageGroup>? _messageGroups;
 
         public string Name { get; set; }
         public MessageFileType Type { get; set; }
-        public ObservableCollection<ObservableCollection<SA2Message>>? Messages { get; set; }
+        public ObservableCollection<SA2MessageGroup>? MessageGroups
+        {
+            get => _messageGroups;
+            set { _messageGroups = value; NotifyPropertyChanged(nameof(MessageGroups)); }
+        }
 
 
         [JsonConstructor]
@@ -34,16 +39,16 @@ namespace SA2MsgTextEditor.Common
             switch(this.Type)
             {
                 case MessageFileType.GameplayMessages:
-                    Messages = reader.ReadGameplayMessages(offsets, encoding);
+                    MessageGroups = reader.ReadGameplayMessages(offsets, encoding);
                     break;
                 case MessageFileType.HuntingHints:
-                    Messages = reader.ReadEmeraldHints(offsets, encoding);
+                    MessageGroups = reader.ReadEmeraldHints(offsets, encoding);
                     break;
                 case MessageFileType.SimpleTextArray:
-                    Messages = reader.ReadSimpleText(offsets, encoding);
+                    MessageGroups = reader.ReadSimpleText(offsets, encoding);
                     break;
                 case MessageFileType.ChaoNames:
-                    Messages = reader.ReadChaoNames(offsets, encoding);
+                    MessageGroups = reader.ReadChaoNames(offsets, encoding);
                     break;
             }
         }        
@@ -55,20 +60,6 @@ namespace SA2MsgTextEditor.Common
 
             writer.WriteToBuffer(rawStrings, encoding, endianness);            
             writer.WriteBufferToFile(fileName);
-        }
-
-        public void Reencode(Encoding selectedEncoding, Encoding newEncoding)
-        {
-            if (Messages == null) return;
-            if (Type == MessageFileType.ChaoNames) return;
-            
-            foreach (var group in Messages)
-            {
-                foreach (var message in group)
-                {
-                    message.Text = newEncoding.GetString(selectedEncoding.GetBytes(message.Text));
-                }
-            }
         }
 
         public Endianness DetectEndianness()
@@ -104,11 +95,11 @@ namespace SA2MsgTextEditor.Common
 
             if (Type == MessageFileType.GameplayMessages)
             {
-                foreach (var group in Messages)
+                foreach (var group in MessageGroups)
                 {
                     var builder = new StringBuilder();
 
-                    foreach (var message in group)
+                    foreach (var message in group.Group)
                     {
                         builder.Append(message.GetRawText(encoding));
                     }
@@ -119,9 +110,9 @@ namespace SA2MsgTextEditor.Common
             }
             else if (Type == MessageFileType.HuntingHints)
             {
-                foreach (var group in Messages)
+                foreach (var group in MessageGroups)
                 {
-                    foreach (var message in group)
+                    foreach (var message in group.Group)
                     {
                         rawStrings.Add(message.GetRawText(encoding));
                     }
@@ -129,41 +120,20 @@ namespace SA2MsgTextEditor.Common
             }
             else if (Type == MessageFileType.SimpleTextArray)
             {
-                foreach (var message in Messages[0])
+                foreach (var message in MessageGroups[0].Group)
                 {
                     rawStrings.Add(message.GetRawText(encoding));
                 }
             }
             else
             {
-                foreach (var message in Messages[0])
+                foreach (var message in MessageGroups[0].Group)
                 {
                     rawStrings.Add(message.GetRawChaoText(encoding));
                 }
             }
             
             return rawStrings;
-        }
-
-        public List<SearchResult> Search(string text, bool ignoreCase)
-        {
-            var searchResults = new List<SearchResult>();
-            StringComparison comparison = ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
-
-            for (int i = 0; i < Messages.Count; i++)
-            {
-                for (int j = 0; j < Messages[i].Count; j++)
-                {
-                    var message = Messages[i][j];
-
-                    if (message.Text != null && message.Text.Contains(text, comparison))
-                    {
-                        searchResults.Add(new SearchResult(i, j, message.Text));
-                    }
-                }
-            }
-
-            return searchResults;
         }
     }
 }

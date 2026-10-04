@@ -1,11 +1,9 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
+﻿using SA2MsgTextEditor.Extensions;
 using System.Text;
-using SA2MsgTextEditor.Extensions;
 
 namespace SA2MsgTextEditor.Common
 {
-    public class SA2Message : INotifyPropertyChanged
+    public class SA2Message : PropertyChangedNotifier
     {
         private string? _voice;
         private string? _framecount;
@@ -16,28 +14,28 @@ namespace SA2MsgTextEditor.Common
         public string? Voice
         {
             get { return _voice; }
-            set { _voice = !string.IsNullOrEmpty(value) ? $"{int.Parse(value)}" : null; OnPropertyChanged(); }
+            set { _voice = !string.IsNullOrEmpty(value) ? $"{int.Parse(value)}" : null; NotifyPropertyChanged(nameof(Voice)); }
         }
         public string? FrameCount
         {
             get { return _framecount; }
-            set { _framecount = !string.IsNullOrEmpty(value) ? $"{int.Parse(value)}" : null; OnPropertyChanged(); }
+            set { _framecount = !string.IsNullOrEmpty(value) ? $"{int.Parse(value)}" : null; NotifyPropertyChanged(nameof(FrameCount)); }
         }
         public bool Is2PPiece
         {
             get { return _is2p; }
-            set { _is2p = value; OnPropertyChanged(); }
+            set { _is2p = value; NotifyPropertyChanged(nameof(Is2PPiece)); }
         }
         public TextCentering TextCentering
         {
             get { return _centering; }
-            set { _centering = value; OnPropertyChanged(); }
+            set { _centering = value; NotifyPropertyChanged(nameof(TextCentering)); }
         }
         public string? Text
         {
             get { return _text; }
-            set { _text = value?.Replace(Environment.NewLine, "\n"); OnPropertyChanged(); }
-        }        
+            set { _text = value?.Replace(Environment.NewLine, "\n"); NotifyPropertyChanged(nameof(Text)); }
+        }
 
 
         // Methods
@@ -114,15 +112,6 @@ namespace SA2MsgTextEditor.Common
             bool useCyrillic = encoding == Encoding.GetEncoding((int)Codepage.Windows1251);
             var converter = new ChaoTextConverter(useCyrillic);
             return converter.ToRaw(Text);
-        }
-
-
-        // Property changed
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-        public void OnPropertyChanged([CallerMemberName] string prop = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
     }
 }

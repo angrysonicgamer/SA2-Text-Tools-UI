@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:system="clr-namespace:System;assembly=mscorlib">
 
-    <system:String x:Key="MainWindow.Title">ソニアド2 メッセージテキストエディター</system:String>
+    <system:String x:Key="App.Title">ソニアド2 メッセージテキストエディター</system:String>
 
     <!-- Menu -->
     <system:String x:Key="Menu.File">ファイル(_F)</system:String>
@@ -35,19 +35,24 @@
     <system:String x:Key="Language.Japanese">日本語</system:String>
 
     <!-- File filters -->
-    <system:String x:Key="Filters.PRS">
-		サポートされているファイル|eh*.prs;mh*.prs;ex_mission?.prs;mission?.prs;msg*.prs;text_?.prs;mcwarn_?.prs;msgalkinderfoname_?.prs
-		|宝探しヒントファイル|eh*.prs
-		|ゲームプレイメッセージファイル|mh*.prs
-		|他のメッセージファイル|ex_mission?.prs;mission?.prs;msg*.prs;text_?.prs;mcwarn_?.prs"
-		|チャオ名ファイル|msgalkinderfoname_?.prs
-		|全てのPRSファイル|*.prs
-	</system:String>
+    <system:String x:Key="Filters.PRS.Supported">サポートされているファイル|eh*.prs;mh*.prs;ex_mission?.prs;mission?.prs;msg*.prs;text_?.prs;mcwarn_?.prs;msgalkinderfoname_?.prs</system:String>
+    <system:String x:Key="Filters.PRS.Hunting">宝探しヒントファイル|eh*.prs</system:String>
+    <system:String x:Key="Filters.PRS.Gameplay">ゲームプレイメッセージファイル|mh*.prs</system:String>
+    <system:String x:Key="Filters.PRS.Other">他のメッセージファイル|ex_mission?.prs;mission?.prs;msg*.prs;text_?.prs;mcwarn_?.prs</system:String>
+    <system:String x:Key="Filters.PRS.Chao">チャオ名ファイル|msgalkinderfoname_?.prs</system:String>
+    <system:String x:Key="Filters.PRS.All">全てのPRSファイル|*.prs</system:String>
     <system:String x:Key="Filters.JSON">JSONファイル|*.json</system:String>
+
+    <!-- Editor -->
+    <system:String x:Key="Editor.GroupList">グループリスト</system:String>
+    <system:String x:Key="Editor.MessageList">メッセージリスト</system:String>
+    <system:String x:Key="Editor.EmeraldsList">エメラルドリスト</system:String>
+    <system:String x:Key="Editor.EmeraldHintsList">エメラルドヒント</system:String>
 
     <!-- Custom codepage input -->
     <system:String x:Key="EnterCustomCodepage.Title">コードページ</system:String>
     <system:String x:Key="EnterCustomCodepage.Text">カスタムコードページを入力してください</system:String>
+    <system:String x:Key="EnterCustomCodepage.Tooltip">上下キーを使用できます</system:String>
     <system:String x:Key="EnterCustomCodepage.OK">OK</system:String>
     <system:String x:Key="EnterCustomCodepage.Cancel">キャンセル</system:String>
 
@@ -64,10 +69,10 @@
     <system:String x:Key="Status.FileType.GameplayMessages">オモチャオのヒント／ゲームプレイメッセージ</system:String>
     <system:String x:Key="Status.FileType.SimpleText">シンプルなテキスト配列</system:String>
     <system:String x:Key="Status.FileType.ChaoNames">チャオ名</system:String>
-    <system:String x:Key="Status.SelectedGroup">選択されたグループ</system:String>
-    <system:String x:Key="Status.SelectedItem">選択されたアイテム</system:String>
-    <system:String x:Key="Status.SelectedItem.None">選択されたアイテム: なし</system:String>
-	<system:String x:Key="Status.TotalItems">アイテム数</system:String>
+    <system:String x:Key="Status.SelectedGroup">選択されたグループ:</system:String>
+    <system:String x:Key="Status.SelectedItem">選択されたアイテム:</system:String>
+    <system:String x:Key="Status.SelectedItem.None">なし</system:String>
+	<system:String x:Key="Status.TotalItems">アイテム数:</system:String>
     <system:String x:Key="Status.Endianness.Auto">オート</system:String>
     <system:String x:Key="Status.Endianness.BigEndian">Big Endian</system:String>
     <system:String x:Key="Status.Endianness.LittleEndian">Little Endian</system:String>    

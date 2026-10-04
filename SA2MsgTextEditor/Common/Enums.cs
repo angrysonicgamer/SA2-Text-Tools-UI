@@ -48,6 +48,8 @@ namespace SA2MsgTextEditor.Common
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum MessageFileType
     {
+        NotLoaded,
+        
         [Display(Name = "Status.FileType.HuntingHints")]
         HuntingHints,
 
@@ -77,6 +79,7 @@ namespace SA2MsgTextEditor.Common
 
     public enum OpenFileMode
     {
+        NoFile,
         OpenPRS,
         ImportJSON
     }

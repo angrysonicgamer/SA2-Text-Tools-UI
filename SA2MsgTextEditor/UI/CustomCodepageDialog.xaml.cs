@@ -8,16 +8,10 @@ namespace SA2MsgTextEditor.UI
     /// </summary>
     public partial class CustomCodepageDialog : Window
     {
-        public int? Codepage { get; set; }
-        
         public CustomCodepageDialog()
         {
             InitializeComponent();
-        }
-
-        private void WindowCustomCodepage_Loaded(object sender, RoutedEventArgs e)
-        {
-            CustomCodepage.Text = Codepage.ToString();
+            DataContext = App.VM;
         }
 
 
@@ -25,7 +19,6 @@ namespace SA2MsgTextEditor.UI
 
         private void ButtonOK_Click(object sender, RoutedEventArgs e)
         {
-            Codepage = int.Parse(CustomCodepage.Text);
             DialogResult = true;
             Close();
         }        

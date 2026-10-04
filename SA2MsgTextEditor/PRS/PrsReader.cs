@@ -41,10 +41,10 @@ namespace SA2MsgTextEditor.PRS
             return offsets;
         }
 
-        public ObservableCollection<ObservableCollection<SA2Message>> ReadEmeraldHints(List<int> offsets, Encoding encoding)
+        public ObservableCollection<SA2MessageGroup> ReadEmeraldHints(List<int> offsets, Encoding encoding)
         {
             var hintsPerPiece = new ObservableCollection<SA2Message>();
-            var messagesList = new ObservableCollection<ObservableCollection<SA2Message>>();
+            var groupedHints = new ObservableCollection<SA2MessageGroup>();
 
             foreach (var offset in offsets)
             {
@@ -55,17 +55,17 @@ namespace SA2MsgTextEditor.PRS
 
                 if (hintsPerPiece.Count == 3)
                 {
-                    messagesList.Add(hintsPerPiece);
+                    groupedHints.Add(new SA2MessageGroup(hintsPerPiece));
                     hintsPerPiece = new ObservableCollection<SA2Message>();
                 }
             }
 
-            return messagesList;
+            return groupedHints;
         }
 
-        public ObservableCollection<ObservableCollection<SA2Message>> ReadGameplayMessages(List<int> offsets, Encoding encoding)
+        public ObservableCollection<SA2MessageGroup> ReadGameplayMessages(List<int> offsets, Encoding encoding)
         {
-            var groupedMessages = new ObservableCollection<ObservableCollection<SA2Message>>();
+            var groupedMessages = new ObservableCollection<SA2MessageGroup>();
 
             foreach (var offset in offsets)
             {
@@ -80,33 +80,33 @@ namespace SA2MsgTextEditor.PRS
                     linesList.Add(message);
                 }
 
-                groupedMessages.Add(linesList);
+                groupedMessages.Add(new SA2MessageGroup(linesList));
             }
 
             return groupedMessages;
         }
 
-        public ObservableCollection<ObservableCollection<SA2Message>> ReadSimpleText(List<int> offsets, Encoding encoding)
+        public ObservableCollection<SA2MessageGroup> ReadSimpleText(List<int> offsets, Encoding encoding)
         {
-            var messagesList = new ObservableCollection<ObservableCollection<SA2Message>>();
-            var stringsList = new ObservableCollection<SA2Message>();
+            var groups = new ObservableCollection<SA2MessageGroup>();
+            var messages = new ObservableCollection<SA2Message>();
 
             foreach (var offset in offsets)
             {
                 var hint = new SA2Message();
                 string rawText = _reader.ReadAt(offset, x => x.ReadCString(encoding));
                 hint.Parse(rawText, encoding);
-                stringsList.Add(hint);
+                messages.Add(hint);
             }
 
-            messagesList.Add(stringsList);
-            return messagesList;
+            groups.Add(new SA2MessageGroup(messages));
+            return groups;
         }
 
-        public ObservableCollection<ObservableCollection<SA2Message>> ReadChaoNames(List<int> offsets, Encoding encoding)
+        public ObservableCollection<SA2MessageGroup> ReadChaoNames(List<int> offsets, Encoding encoding)
         {
-            var messagesList = new ObservableCollection<ObservableCollection<SA2Message>>();
-            var namesList = new ObservableCollection<SA2Message>();
+            var groups = new ObservableCollection<SA2MessageGroup>();
+            var names = new ObservableCollection<SA2Message>();
             bool useCyrillic = encoding == Encoding.GetEncoding((int)Codepage.Windows1251);
             var converter = new ChaoTextConverter(useCyrillic);
 
@@ -114,11 +114,11 @@ namespace SA2MsgTextEditor.PRS
             {
                 var chaoName = new SA2Message();
                 chaoName.Text = converter.ToReadable(_reader.ReadAt(offset, x => x.ReadBytesUntilNullTerminator()));
-                namesList.Add(chaoName);
+                names.Add(chaoName);
             }
 
-            messagesList.Add(namesList);
-            return messagesList;
+            groups.Add(new SA2MessageGroup(names));
+            return groups;
         }
 
         public void Dispose()

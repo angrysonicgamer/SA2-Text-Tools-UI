@@ -1,5 +1,6 @@
 ﻿using SA2MsgTextEditor.Common;
 using SA2MsgTextEditor.Config;
+using SA2MsgTextEditor.VM;
 using System.Text;
 using System.Windows;
 
@@ -10,9 +11,8 @@ namespace SA2MsgTextEditor
     /// </summary>
     public partial class App : Application
     {
-        public static AppConfig Config = new AppConfig();
-        public static SA2MessageFile? SA2Msg { get; set; }
-        public static string? LastSearchText { get; set; }
+        public static AppConfig Config { get; set; } = new AppConfig();
+        public static AppViewModel VM { get; set; } = new AppViewModel();
 
         public static string GetString(string key)
         {
@@ -24,6 +24,18 @@ namespace SA2MsgTextEditor
             }
 
             return key;
+        }
+
+        public static string GetCombinedString(char separator, params string[] keys)
+        {
+            var strings = new List<string>();
+
+            foreach (var key in keys)
+            {
+                strings.Add(GetString(key));
+            }
+
+            return string.Join(separator, strings.ToArray());
         }
 
         public static void SetLanguage(Language language)
@@ -44,6 +56,7 @@ namespace SA2MsgTextEditor
         protected override void OnStartup(StartupEventArgs e)
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            ShutdownMode = ShutdownMode.OnMainWindowClose;
             Config.Read();
             SetLanguage(Config.Settings.Language);
             base.OnStartup(e);

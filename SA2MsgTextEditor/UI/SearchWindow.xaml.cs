@@ -1,5 +1,4 @@
-﻿using SA2MsgTextEditor.Common;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -10,26 +9,35 @@ namespace SA2MsgTextEditor.UI
     /// </summary>
     public partial class SearchWindow : Window
     {
-        public string? Text { get; set; }
-        private List<SearchResult>? _searchResults;
-
-
         public SearchWindow()
         {
             InitializeComponent();
+            DataContext = App.VM;
         }
 
         private void WindowSearch_Loaded(object sender, RoutedEventArgs e)
         {
-            SearchString.Text = Text;
             IgnoreCase.IsChecked = App.Config.Search.IgnoreCase;
         }
 
-        private void WindowSearch_KeyUp(object sender, KeyEventArgs e)
+        private void WindowSearch_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (e.Key == Key.Escape)
+            App.VM.ClearSearchResults();
+        }
+
+
+        // Buttons
+
+        private void Search()
+        {
+            if (string.IsNullOrEmpty(SearchString.Text)) return;
+
+            App.VM.Search(SearchString.Text, IgnoreCase.IsChecked == true);
+
+            if (App.VM.SearchResults?.Count == 0)
             {
-                Close();
+                MessageBox.Show(App.GetString("Message.NothingFound"), App.GetString("App.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
             }
         }
 
@@ -37,27 +45,13 @@ namespace SA2MsgTextEditor.UI
         {
             if (e.Key == Key.Enter)
             {
-                ButtonFind_Click(sender, e);
+                Search();
             }
         }
 
-
-        // Buttons
-
         private void ButtonFind_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(SearchString.Text)) return;
-            
-            _searchResults = App.SA2Msg?.Search(SearchString.Text, IgnoreCase.IsChecked == true);
-            ResultsCountNumber.Text = _searchResults?.Count.ToString();
-            SearchResults.ItemsSource = _searchResults;
-            App.LastSearchText = SearchString.Text;
-
-            if (_searchResults?.Count == 0)
-            {
-                MessageBox.Show(App.GetString("Message.NothingFound"), App.GetString("MainWindow.Title"), MessageBoxButton.OK, MessageBoxImage.Information);
-                return;
-            }
+            Search();
         }
 
         private void ButtonClose_Click(object sender, RoutedEventArgs e)
@@ -68,16 +62,25 @@ namespace SA2MsgTextEditor.UI
 
         // "Ignore case" checkbox
 
+        private void SetIgnoreCase(bool value)
+        {
+            IgnoreCase.IsChecked = value;
+
+            if (IgnoreCase.IsChecked != App.Config.Search.IgnoreCase)
+            {
+                App.Config.Search.IgnoreCase = IgnoreCase.IsChecked.Value;
+                App.Config.Save();
+            }
+        }
+
         private void IgnoreCase_Checked(object sender, RoutedEventArgs e)
         {
-            IgnoreCase.IsChecked = App.Config.Search.IgnoreCase = true;
-            App.Config.Save();
+            SetIgnoreCase(true);
         }
 
         private void IgnoreCase_Unchecked(object sender, RoutedEventArgs e)
         {
-            IgnoreCase.IsChecked = App.Config.Search.IgnoreCase = false;
-            App.Config.Save();
+            SetIgnoreCase(false);
         }
 
 
@@ -85,14 +88,12 @@ namespace SA2MsgTextEditor.UI
 
         private void SearchResults_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (SearchResults.SelectedIndex == -1 || _searchResults == null) return;
+            if (SearchResultsList.SelectedIndex == -1 || App.VM.SearchResults == null) return;
 
-            var mainWindow = Application.Current.MainWindow as MainWindow;
-
-            if (mainWindow != null && App.SA2Msg != null)
+            if (App.VM.MessageFileLoaded)
             {
-                mainWindow.ListGroupedMessages.SelectedIndex = _searchResults[SearchResults.SelectedIndex].GroupIndex;
-                mainWindow.MessagesList.SelectedIndex = _searchResults[SearchResults.SelectedIndex].MessageIndex;
+                App.VM.SelectedGroupIndex = App.VM.SearchResults[SearchResultsList.SelectedIndex].GroupIndex;
+                App.VM.SelectedMessageIndex = App.VM.SearchResults[SearchResultsList.SelectedIndex].MessageIndex;
             }
         }        
     }

@@ -1,10 +1,6 @@
 ﻿using Microsoft.Win32;
 using SA2MsgTextEditor.Common;
-using SA2MsgTextEditor.Extensions;
-using SA2MsgTextEditor.JSON;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,40 +13,27 @@ namespace SA2MsgTextEditor.UI
     /// </summary>
     public partial class MainWindow : Window
     {
-        private string? _fileName;
-        private bool _fileLoaded = false;
-        private ObservableCollection<SA2Message>? _selectedGroup;
-        private int _selectedGroupIndex = -1;
-        private Encoding _selectedEncoding;
-        private Endianness _selectedEndianness;
-        private OpenFileMode _mode;
-
         public MainWindow()
         {
-            InitializeComponent();            
-            _selectedEncoding = App.Config.Settings.CustomCodepage.HasValue ? Encoding.GetEncoding(App.Config.Settings.CustomCodepage.Value) : Encoding.GetEncoding((int)App.Config.Settings.Encoding);
-            _selectedEndianness = App.Config.Settings.Endianness;
+            InitializeComponent();
+            DataContext = App.VM;
         }
 
         private void WindowTextEditor_Loaded(object sender, RoutedEventArgs e)
         {
+            App.VM.SetupConfigItems();
             SetupMenusInitial();
-            SetDefaults();
         }
 
         private void WindowTextEditor_Closing(object sender, CancelEventArgs e)
         {
-            if (_fileLoaded)
+            if (App.VM.MessageFileLoaded)
             {
-                var result = MessageBox.Show(App.GetString("Message.FileOpenOnClosing"), App.GetString("MainWindow.Title"), MessageBoxButton.OKCancel);
+                var result = MessageBox.Show(App.GetString("Message.FileOpenOnClosing"), App.GetString("App.Title"), MessageBoxButton.OKCancel, MessageBoxImage.Information);
 
                 if (result == MessageBoxResult.Cancel)
                 {
                     e.Cancel = true;
-                }
-                else
-                {
-                    Application.Current.Shutdown();
                 }
             }
         }
@@ -102,107 +85,29 @@ namespace SA2MsgTextEditor.UI
                     break;
             }
         }
-        
-        private void SetDefaults()
-        {
-            _fileName = "";
-            _fileLoaded = false;
-            SetWindowTitle();
-            _mode = OpenFileMode.OpenPRS;
-            MenuSave.IsEnabled = false;
-            MenuSaveAs.IsEnabled = false;
-            MenuExportJson.IsEnabled = false;
-            MenuSearch.IsEnabled = false;
-            AutoEndian.IsEnabled = true;
-            MessagesList.Visibility = Visibility.Hidden;
-            ListGroupedMessages.Visibility = Visibility.Hidden;
-            ButtonAdd.Visibility = Visibility.Hidden;
-            ButtonInsertAfter.Visibility = Visibility.Hidden;
-            ButtonRemoveLast.Visibility = Visibility.Hidden;
-            ButtonRemoveSelected.Visibility = Visibility.Hidden;
-            UpdateStatusBar();
-        }
 
         private void SetupViewOnFileLoading(MessageFileType type)
         {
-            _fileLoaded = true;
-            SetWindowTitle();
-            MenuSave.IsEnabled = _mode == OpenFileMode.OpenPRS;
-            MenuSaveAs.IsEnabled = true;
-            MenuExportJson.IsEnabled = true;
-            MenuSearch.IsEnabled = true;
-            AutoEndian.IsEnabled = false;
-            ListGroupedMessages.ItemsSource = App.SA2Msg?.Messages;            
-
             if (type == MessageFileType.GameplayMessages)
             {
-                GroupsList.Width = GridLength.Auto;
+                GroupsList.Width = new GridLength(1, GridUnitType.Star);
                 Buttons.Height = GridLength.Auto;
-                ListGroupedMessages.Visibility = Visibility.Visible;
-                MessagesList.Visibility = Visibility.Hidden;
-                ColumnVoice.Visibility = Visibility.Visible;
-                ColumnFrameCount.Visibility = Visibility.Visible;
-                ColumnIs2P.Visibility = Visibility.Hidden;
-                ColumnTextCentering.Visibility = Visibility.Visible;
-                ColumnText.Visibility = Visibility.Visible;
-                ColumnChaoNames.Visibility = Visibility.Hidden;
-                ButtonAdd.Visibility = Visibility.Hidden;
-                ButtonInsertAfter.Visibility = Visibility.Hidden;
-                ButtonRemoveLast.Visibility = Visibility.Hidden;
-                ButtonRemoveSelected.Visibility = Visibility.Hidden;
             }
             else if (type == MessageFileType.HuntingHints)
             {
-                GroupsList.Width = GridLength.Auto;
+                GroupsList.Width = new GridLength(1, GridUnitType.Star);
                 Buttons.Height = new GridLength(0);
-                ListGroupedMessages.Visibility = Visibility.Visible;
-                MessagesList.Visibility = Visibility.Hidden;             
-                ColumnVoice.Visibility = Visibility.Hidden;
-                ColumnFrameCount.Visibility = Visibility.Hidden;
-                ColumnIs2P.Visibility = Visibility.Visible;
-                ColumnTextCentering.Visibility = Visibility.Visible;
-                ColumnText.Visibility = Visibility.Visible;
-                ColumnChaoNames.Visibility = Visibility.Hidden;
             }
             else if (type == MessageFileType.SimpleTextArray)
             {
                 GroupsList.Width = new GridLength(0);
                 Buttons.Height = new GridLength(0);
-                ListGroupedMessages.Visibility = Visibility.Hidden;
-                ListGroupedMessages.SelectedIndex = 0;
-                MessagesList.Visibility = Visibility.Visible;
-                ColumnVoice.Visibility = Visibility.Hidden;
-                ColumnFrameCount.Visibility = Visibility.Hidden;
-                ColumnIs2P.Visibility = Visibility.Hidden;
-                ColumnTextCentering.Visibility = Visibility.Visible;
-                ColumnText.Visibility = Visibility.Visible;
-                ColumnChaoNames.Visibility = Visibility.Hidden;
             }
-            else // Chao names
+            else if (type == MessageFileType.ChaoNames)
             {
                 GroupsList.Width = new GridLength(0);
                 Buttons.Height = GridLength.Auto;
-                ListGroupedMessages.Visibility = Visibility.Hidden;
-                ListGroupedMessages.SelectedIndex = 0;
-                MessagesList.Visibility = Visibility.Visible;
-                ColumnVoice.Visibility = Visibility.Hidden;
-                ColumnFrameCount.Visibility = Visibility.Hidden;
-                ColumnIs2P.Visibility = Visibility.Hidden;
-                ColumnTextCentering.Visibility = Visibility.Hidden;
-                ColumnText.Visibility = Visibility.Hidden;
-                ColumnChaoNames.Visibility = Visibility.Visible;
-                ButtonAdd.Visibility = Visibility.Visible;
-                ButtonInsertAfter.Visibility = Visibility.Visible;
-                ButtonRemoveLast.Visibility = Visibility.Visible;
-                ButtonRemoveSelected.Visibility = Visibility.Visible;
             }
-
-            UpdateStatusBar();
-        }
-
-        private void SetWindowTitle()
-        {
-            Title = _fileLoaded ? $"{App.GetString("MainWindow.Title")} — {Path.GetFileName(_fileName)}" : App.GetString("MainWindow.Title");
         }
 
         #endregion
@@ -210,100 +115,112 @@ namespace SA2MsgTextEditor.UI
 
         #region Menu > File
 
+        // Helpers
+
+        private bool UserDeclinedOpeningAnotherFile()
+        {
+            var result = MessageBox.Show(App.GetString("Message.FileOpenOnOpeningNewFile"), App.GetString("App.Title"), MessageBoxButton.YesNo, MessageBoxImage.Information);
+            return result == MessageBoxResult.No;
+        }
+
+        private bool ShowOpenFileDialog(out string fileName, params string[] filterResourceKeys)
+        {
+            fileName = "";
+
+            var openFileWindow = new OpenFileDialog() { Filter = App.GetCombinedString('|', filterResourceKeys) };
+            if (openFileWindow.ShowDialog() == false) return false;
+
+            fileName = openFileWindow.FileName;
+            return true;
+        }
+
+        private bool ShowSaveFileDialog(out string fileName, string defaultExtension, params string[] filterResourceKeys)
+        {
+            fileName = "";
+
+            var saveFileDialog = new SaveFileDialog() { DefaultExt = defaultExtension, FileName = App.VM.MessageFile != null ? App.VM.MessageFile.Name : "", Filter = App.GetCombinedString('|', filterResourceKeys) };
+            if (saveFileDialog.ShowDialog() == false) return false;
+
+            fileName = saveFileDialog.FileName;
+            return true;
+        }
+
+
+        // Menu commands
+
         private void CommandOpen_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            if (_fileLoaded)
-            {
-                var result = MessageBox.Show(App.GetString("Message.FileOpenOnOpeningNewFile"), App.GetString("MainWindow.Title"), MessageBoxButton.YesNo);
-                if (result == MessageBoxResult.No) return;
-            }
+            if (App.VM.MessageFileLoaded && UserDeclinedOpeningAnotherFile()) return;
+            if (!ShowOpenFileDialog(out string fileName, "Filters.PRS.Supported", "Filters.PRS.Hunting", "Filters.PRS.Gameplay", "Filters.PRS.Other", "Filters.PRS.Chao", "Filters.PRS.All")) return;
 
-            var openFileWindow = new OpenFileDialog() { Filter = App.GetString("Filters.PRS") };
-            if (openFileWindow.ShowDialog() == false) return;
-
-            _fileName = openFileWindow.FileName;
-            App.SA2Msg = new SA2MessageFile(_fileName);
-            var detectedEndianness = App.SA2Msg.DetectEndianness();
+            App.VM.LoadMessageFile(fileName);            
+            var detectedEndianness = App.VM.DetectEndianness();
 
             if (App.Config.Settings.Endianness != Endianness.Auto)
             {
-                if (detectedEndianness != _selectedEndianness)
+                if (detectedEndianness != App.VM.SelectedEndianness)
                 {
-                    MessageBox.Show(App.GetString("Message.WrongEndianness"), App.GetString("MainWindow.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
-                    SetDefaults();
-                    ResetStatusBar();
+                    App.VM.ClearMessageFile();
+                    MessageBox.Show(App.GetString("Message.WrongEndianness"), App.GetString("App.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
             }
             else
             {
-                _selectedEndianness = detectedEndianness;
+                App.VM.SelectedEndianness = detectedEndianness;
             }
 
-            _mode = OpenFileMode.OpenPRS;
-            App.SA2Msg.ReadMessages(_selectedEncoding, _selectedEndianness);            
-            SetupViewOnFileLoading(App.SA2Msg.Type);
-            UpdateStatusBar();
+            App.VM.ReadMessages();
+            SetupViewOnFileLoading(App.VM.FileType);
         }
 
         private void CommandSave_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            App.SA2Msg?.Save(_fileName, _selectedEncoding, _selectedEndianness);
+            App.VM.SaveMessageFile();
         }
 
         private void CommandSaveAs_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            if (_mode == OpenFileMode.ImportJSON && App.Config.Settings.Endianness == Endianness.Auto)
+            if (App.VM.FileMode == OpenFileMode.ImportJSON && App.Config.Settings.Endianness == Endianness.Auto)
             {
-                MessageBox.Show(App.GetString("Message.AutoEndiannessSaveAs"), App.GetString("MainWindow.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(App.GetString("Message.AutoEndiannessSaveAs"), App.GetString("App.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            var saveFileDialog = new SaveFileDialog() { DefaultExt = "prs", FileName = Path.GetFileNameWithoutExtension(_fileName), Filter = App.GetString("Filters.PRS") };
-            if (saveFileDialog.ShowDialog() == false) return;
+            if (!ShowSaveFileDialog(out string fileName, "prs", "Filters.PRS.Supported", "Filters.PRS.Hunting", "Filters.PRS.Gameplay", "Filters.PRS.Other", "Filters.PRS.Chao", "Filters.PRS.All")) return;
 
-            _fileName = saveFileDialog.FileName;
+            App.VM.FileName = fileName;
             CommandSave_Executed(sender, e);
         }
 
         private void MenuImportJson_Click(object sender, RoutedEventArgs e)
         {
-            if (_fileLoaded)
+            if (App.VM.MessageFileLoaded && UserDeclinedOpeningAnotherFile()) return;
+            if (!ShowOpenFileDialog(out string fileName, "Filters.JSON")) return;
+
+            App.VM.ImportFromJson(fileName);          
+
+            if (App.VM.MessageFile?.MessageGroups != null)
             {
-                var result = MessageBox.Show(App.GetString("Message.FileOpenOnOpeningNewFile"), App.GetString("MainWindow.Title"), MessageBoxButton.YesNo);
-                if (result == MessageBoxResult.No) return;
-            }
-
-            var openFileWindow = new OpenFileDialog() { Filter = App.GetString("Filters.JSON") };
-            if (openFileWindow.ShowDialog() == false) return;
-
-            _fileName = openFileWindow.FileName;
-            App.SA2Msg = Json.Import<SA2MessageFile>(_fileName);            
-
-            if (App.SA2Msg?.Messages != null)
-            {
-                _mode = OpenFileMode.ImportJSON;
-                SetupViewOnFileLoading(App.SA2Msg.Type);
+                SetupViewOnFileLoading(App.VM.FileType);
             }
             else
             {
-                MessageBox.Show(App.GetString("Message.InvalidJson"), App.GetString("MainWindow.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
-                SetDefaults();
+                MessageBox.Show(App.GetString("Message.InvalidJson"), App.GetString("App.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
         private void MenuExportJson_Click(object sender, RoutedEventArgs e)
         {
-            var saveFileDialog = new SaveFileDialog() { DefaultExt = "json", FileName = Path.GetFileNameWithoutExtension(_fileName), Filter = App.GetString("Filters.JSON") };
-            if (saveFileDialog.ShowDialog() == false) return;
+            if (!ShowSaveFileDialog(out string fileName, "json", "Filters.JSON")) return;
 
-            _fileName = saveFileDialog.FileName;
-            Json.Export(App.SA2Msg, _fileName);
+            App.VM.FileName = fileName;
+            App.VM.ExportJSON();
         }
 
         private void CommandClose_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            Application.Current.Shutdown();
+            Close();
         }
 
         #endregion
@@ -312,9 +229,9 @@ namespace SA2MsgTextEditor.UI
 
         private void CommandSearch_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            if (App.SA2Msg == null) return;
+            if (!App.VM.MessageFileLoaded) return;
 
-            var searchWindow = new SearchWindow() { Text = App.LastSearchText };
+            var searchWindow = new SearchWindow();
             searchWindow.Show();
         }
 
@@ -322,6 +239,8 @@ namespace SA2MsgTextEditor.UI
 
         #region Menu > Settings
 
+        // Encoding
+        
         private void CheckCodepageMenuItem(MenuItem item)
         {
             Codepage1252.IsChecked = item == Codepage1252;
@@ -330,59 +249,42 @@ namespace SA2MsgTextEditor.UI
             CodepageCustom.IsChecked = item == CodepageCustom;
         }
 
-        private void UpdateViewOnCodepageChange()
+        private void ReencodeEventFile(Codepage newCodepage)
         {
-            if (App.SA2Msg?.Type == MessageFileType.GameplayMessages || App.SA2Msg?.Type == MessageFileType.HuntingHints)
-            {
-                ListGroupedMessages.ItemsSource = null;
-                ListGroupedMessages.ItemsSource = App.SA2Msg?.Messages;
-            }
+            App.Config.SetEncoding(newCodepage);
+            var newEncoding = Encoding.GetEncoding((int)newCodepage);            
+            App.VM.ReencodeMessageFile(newEncoding);            
+            App.VM.SelectedEncoding = newEncoding;
+            App.Config.Save();
         }
 
         private void Codepage1251_Click(object sender, RoutedEventArgs e)
         {
-            var newEncoding = Encoding.GetEncoding((int)Codepage.Windows1251);
-            App.SA2Msg?.Reencode(_selectedEncoding, newEncoding);
-            _selectedEncoding = newEncoding;            
             CheckCodepageMenuItem(Codepage1251);
-            UpdateViewOnCodepageChange();
-            App.Config.SetEncoding(Codepage.Windows1251);
-            App.Config.Save();
-            UpdateStatusBar();
+            ReencodeEventFile(Codepage.Windows1251);
         }
 
         private void Codepage1252_Click(object sender, RoutedEventArgs e)
         {
-            var newEncoding = Encoding.GetEncoding((int)Codepage.Windows1252);
-            App.SA2Msg?.Reencode(_selectedEncoding, newEncoding);
-            _selectedEncoding = newEncoding;
             CheckCodepageMenuItem(Codepage1252);
-            UpdateViewOnCodepageChange();
-            App.Config.SetEncoding(Codepage.Windows1252);
-            App.Config.Save();
-            UpdateStatusBar();
+            ReencodeEventFile(Codepage.Windows1252);
         }
 
         private void CodepageSJIS_Click(object sender, RoutedEventArgs e)
         {
-            var newEncoding = Encoding.GetEncoding((int)Codepage.ShiftJIS);
-            App.SA2Msg?.Reencode(_selectedEncoding, newEncoding);
-            _selectedEncoding = newEncoding;
             CheckCodepageMenuItem(CodepageSJIS);
-            UpdateViewOnCodepageChange();
-            App.Config.SetEncoding(Codepage.ShiftJIS);
-            App.Config.Save();
-            UpdateStatusBar();
+            ReencodeEventFile(Codepage.ShiftJIS);
         }
 
         private void CodepageCustom_Click(object sender, RoutedEventArgs e)
         {
-            var inputCustomCodepage = new CustomCodepageDialog { Codepage = _selectedEncoding.CodePage };
+            App.VM.Codepage = App.VM.SelectedEncoding.CodePage;
+            var inputCustomCodepage = new CustomCodepageDialog();
             bool? result = inputCustomCodepage.ShowDialog();
 
             if (result == true)
             {
-                int customCodepage = inputCustomCodepage.Codepage.Value;
+                int customCodepage = App.VM.Codepage;
                 Encoding newEncoding;
 
                 try
@@ -391,13 +293,10 @@ namespace SA2MsgTextEditor.UI
                 }
                 catch (NotSupportedException)
                 {
-                    MessageBox.Show(App.GetString("Message.UnsupportedCodepage"), App.GetString("MainWindow.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show(App.GetString("Message.UnsupportedCodepage"), App.GetString("App.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);
                     CodepageCustom.IsChecked = false;
                     return;
-                }
-
-                App.SA2Msg?.Reencode(_selectedEncoding, newEncoding);
-                _selectedEncoding = newEncoding;
+                }                
 
                 if (customCodepage == (int)Codepage.Windows1252)
                 {
@@ -420,9 +319,9 @@ namespace SA2MsgTextEditor.UI
                     App.Config.SetEncoding(customCodepage);
                 }
 
+                App.VM.ReencodeMessageFile(newEncoding);
+                App.VM.SelectedEncoding = newEncoding;
                 App.Config.Save();
-                UpdateViewOnCodepageChange();
-                UpdateStatusBar();
             }
             else
             {
@@ -430,14 +329,16 @@ namespace SA2MsgTextEditor.UI
             }
         }
 
+
+        // Endianness
+
         private void AutoEndian_Click(object sender, RoutedEventArgs e)
         {
             AutoEndian.IsChecked = true;
             BigEndian.IsChecked = false;
             LittleEndian.IsChecked = false;
-            App.Config.Settings.Endianness = Endianness.Auto;
+            App.VM.SelectedEndianness = App.Config.Settings.Endianness = Endianness.Auto;
             App.Config.Save();
-            UpdateStatusBar();
         }
 
         private void BigEndian_Click(object sender, RoutedEventArgs e)
@@ -445,9 +346,8 @@ namespace SA2MsgTextEditor.UI
             BigEndian.IsChecked = true;
             LittleEndian.IsChecked = false;
             AutoEndian.IsChecked = false;
-            _selectedEndianness = App.Config.Settings.Endianness = Endianness.BigEndian;
+            App.VM.SelectedEndianness = App.Config.Settings.Endianness = Endianness.BigEndian;
             App.Config.Save();
-            UpdateStatusBar();
         }
 
         private void LittleEndian_Click(object sender, RoutedEventArgs e)
@@ -455,9 +355,8 @@ namespace SA2MsgTextEditor.UI
             LittleEndian.IsChecked = true;
             BigEndian.IsChecked = false;
             AutoEndian.IsChecked = false;
-            _selectedEndianness = App.Config.Settings.Endianness = Endianness.LittleEndian;
+            App.VM.SelectedEndianness = App.Config.Settings.Endianness = Endianness.LittleEndian;
             App.Config.Save();
-            UpdateStatusBar();
         }
 
         #endregion
@@ -471,9 +370,7 @@ namespace SA2MsgTextEditor.UI
             MenuEnglish.IsChecked = true;
             MenuRussian.IsChecked = false;
             MenuJapanese.IsChecked = false;
-            SetWindowTitle();
-            UpdateViewOnLanguageChange();
-            UpdateStatusBar();
+            App.VM.UpdateLanguage();
         }
 
         private void MenuRussian_Click(object sender, RoutedEventArgs e)
@@ -483,9 +380,7 @@ namespace SA2MsgTextEditor.UI
             MenuEnglish.IsChecked = false;
             MenuRussian.IsChecked = true;
             MenuJapanese.IsChecked = false;
-            SetWindowTitle();
-            UpdateViewOnLanguageChange();
-            UpdateStatusBar();
+            App.VM.UpdateLanguage();
         }
 
         private void MenuJapanese_Click(object sender, RoutedEventArgs e)
@@ -495,67 +390,7 @@ namespace SA2MsgTextEditor.UI
             MenuEnglish.IsChecked = false;
             MenuRussian.IsChecked = false;
             MenuJapanese.IsChecked = true;
-            SetWindowTitle();
-            UpdateViewOnLanguageChange();
-            UpdateStatusBar();
-        }
-
-        private void UpdateViewOnLanguageChange()
-        {
-            ListGroupedMessages.ItemsSource = null;
-            ListGroupedMessages.ItemsSource = App.SA2Msg?.Messages;
-            MessagesList.ItemsSource = null;
-            MessagesList.ItemsSource = _selectedGroup;
-        }
-
-        #endregion
-
-
-        #region List box (groups)
-
-        private void ListGroupedMessages_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (sender is ListBox listBox && listBox.SelectedItem is ObservableCollection<SA2Message> msgList)
-            {
-                MessagesList.Visibility = Visibility.Visible;
-                ButtonAdd.Visibility = Visibility.Visible;
-                ButtonRemoveLast.Visibility = Visibility.Visible;
-                ButtonInsertAfter.Visibility = Visibility.Visible;
-                ButtonRemoveSelected.Visibility = Visibility.Visible;
-                MessagesList.ItemsSource = msgList;
-                _selectedGroup = msgList;
-                _selectedGroupIndex = listBox.SelectedIndex;
-
-                listBox.Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    listBox.UpdateLayout();
-                    listBox.ScrollIntoView(listBox.SelectedItem);
-                }));
-            }
-
-            UpdateStatusBar();
-        }
-
-        #endregion
-
-
-        #region Data grid (messages list)
-
-        private void MessagesList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ButtonInsertAfter.IsEnabled = MessagesList.SelectedIndex != -1;
-            ButtonRemoveSelected.IsEnabled = MessagesList.SelectedIndex != -1;
-
-            if (sender is DataGrid dataGrid && dataGrid.SelectedItem != null)
-            {
-                dataGrid.Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    dataGrid.UpdateLayout();
-                    dataGrid.ScrollIntoView(dataGrid.SelectedItem);
-                }));
-            }
-
-            UpdateStatusBar();
+            App.VM.UpdateLanguage();
         }
 
         #endregion
@@ -565,70 +400,22 @@ namespace SA2MsgTextEditor.UI
 
         private void ButtonAdd_Click(object sender, RoutedEventArgs e)
         {
-            _selectedGroup?.Add(new SA2Message());
-            UpdateStatusBar();
+            App.VM.AddMessage();
         }
 
         private void ButtonRemoveLast_Click(object sender, RoutedEventArgs e)
         {
-            _selectedGroup?.RemoveAt(_selectedGroup.Count - 1);
-            UpdateStatusBar();
+            App.VM.RemoveLastMessage();
         }
 
         private void ButtonInsertAfter_Click(object sender, RoutedEventArgs e)
         {
-            if (MessagesList.SelectedIndex + 1 < _selectedGroup?.Count)
-            {
-                _selectedGroup.Insert(MessagesList.SelectedIndex + 1, new SA2Message());
-            }
-            else
-            {
-                _selectedGroup?.Add(new SA2Message());
-            }
-
-            UpdateStatusBar();
+            App.VM.InsertMessage();
         }
 
         private void ButtonRemoveSelected_Click(object sender, RoutedEventArgs e)
         {
-            _selectedGroup?.RemoveAt(MessagesList.SelectedIndex);
-            UpdateStatusBar();
-        }
-
-        #endregion
-
-
-        #region Status bar
-
-        private void SetDetailsVisibility(Visibility visibility)
-        {
-            StatusSelectedGroup.Visibility = StatusSelectedItem.Visibility = StatusTotalItems.Visibility = visibility;
-            StatusSeparator1.Visibility = StatusSeparator2.Visibility = StatusSeparator3.Visibility = visibility;
-        }
-
-        private void UpdateStatusBar()
-        {
-            string encoding = App.GetString(App.Config.Settings.Encoding.GetDisplayName());
-            StatusFileType.Text = _fileLoaded && App.SA2Msg != null ? App.GetString(App.SA2Msg.Type.GetDisplayName()) : "";
-            StatusEncoding.Text = App.Config.Settings.CustomCodepage.HasValue ? $"{encoding}: {App.Config.Settings.CustomCodepage.Value}" : encoding;
-            StatusEndianness.Text = App.GetString(_selectedEndianness.GetDisplayName());
-            
-            if (_selectedGroupIndex != -1 && _fileLoaded)
-            {
-                SetDetailsVisibility(Visibility.Visible);
-                StatusSelectedGroup.Text = $"{App.GetString("Status.SelectedGroup")}: {_selectedGroupIndex}";
-                StatusSelectedItem.Text = MessagesList.SelectedIndex != -1 ? $"{App.GetString("Status.SelectedItem")}: {MessagesList.SelectedIndex}" : App.GetString("Status.SelectedItem.None");
-                StatusTotalItems.Text = $"{App.GetString("Status.TotalItems")}: {_selectedGroup?.Count}";
-            }
-            else
-            {
-                ResetStatusBar();
-            }
-        }
-
-        private void ResetStatusBar()
-        {
-            SetDetailsVisibility(Visibility.Hidden);
+            App.VM.RemoveSelectedMessage();
         }
 
         #endregion

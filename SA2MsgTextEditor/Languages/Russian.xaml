@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:system="clr-namespace:System;assembly=mscorlib">
 
-    <system:String x:Key="MainWindow.Title">Редактор текста SA2</system:String>
+    <system:String x:Key="App.Title">Редактор текста SA2</system:String>
 
     <!-- Menu -->
     <system:String x:Key="Menu.File">_Файл</system:String>
@@ -35,19 +35,24 @@
     <system:String x:Key="Language.Japanese">日本語 (Японский)</system:String>
 
     <!-- File filters -->
-    <system:String x:Key="Filters.PRS">
-        Поддерживаемые файлы|eh*.prs;mh*.prs;ex_mission?.prs;mission?.prs;msg*.prs;text_?.prs;mcwarn_?.prs;msgalkinderfoname_?.prs
-		|Файлы с подсказками для поисковых уровней|eh*.prs
-		|Файлы с геймплейными подсказками|mh*.prs
-		|Прочие файлы с текстом|ex_mission?.prs;mission?.prs;msg*.prs;text_?.prs;mcwarn_?.prs"
-		|Файлы с именами Чао|msgalkinderfoname_?.prs
-		|Все PRS-файлы|*.prs
-    </system:String>
+    <system:String x:Key="Filters.PRS.Supported">Поддерживаемые файлы|eh*.prs;mh*.prs;ex_mission?.prs;mission?.prs;msg*.prs;text_?.prs;mcwarn_?.prs;msgalkinderfoname_?.prs</system:String>
+    <system:String x:Key="Filters.PRS.Hunting">Файлы с подсказками для поисковых уровней|eh*.prs</system:String>
+    <system:String x:Key="Filters.PRS.Gameplay">Файлы с геймплейными подсказками|mh*.prs</system:String>
+    <system:String x:Key="Filters.PRS.Other">Прочие файлы с текстом|ex_mission?.prs;mission?.prs;msg*.prs;text_?.prs;mcwarn_?.prs</system:String>
+    <system:String x:Key="Filters.PRS.Chao">Файлы с именами Чао|msgalkinderfoname_?.prs</system:String>
+    <system:String x:Key="Filters.PRS.All">Все PRS-файлы|*.prs</system:String>
     <system:String x:Key="Filters.JSON">JSON-файлы|*.json</system:String>
+
+    <!-- Editor -->
+    <system:String x:Key="Editor.GroupList">Список групп</system:String>
+    <system:String x:Key="Editor.MessageList">Список текстовых строк</system:String>
+    <system:String x:Key="Editor.EmeraldsList">Список изумрудов</system:String>
+    <system:String x:Key="Editor.EmeraldHintsList">Подсказки для поиска</system:String>
 
     <!-- Custom codepage input -->
     <system:String x:Key="EnterCustomCodepage.Title">Кодировка</system:String>
     <system:String x:Key="EnterCustomCodepage.Text">Введите номер кодировки</system:String>
+    <system:String x:Key="EnterCustomCodepage.Tooltip">Вы можете использовать клавиши ВВЕРХ/ВНИЗ</system:String>
     <system:String x:Key="EnterCustomCodepage.OK">OK</system:String>
     <system:String x:Key="EnterCustomCodepage.Cancel">Отмена</system:String>
 
@@ -64,10 +69,10 @@
 	<system:String x:Key="Status.FileType.GameplayMessages">Подсказки Омочао / геймплейный текст</system:String>
 	<system:String x:Key="Status.FileType.SimpleText">Простой массив текста</system:String>
 	<system:String x:Key="Status.FileType.ChaoNames">Имена Чао</system:String>
-    <system:String x:Key="Status.SelectedGroup">Выбранная группа</system:String>
-    <system:String x:Key="Status.SelectedItem">Выбранный элемент</system:String>
-    <system:String x:Key="Status.SelectedItem.None">Выбранный элемент: нет</system:String>
-	<system:String x:Key="Status.TotalItems">Всего элементов</system:String>
+    <system:String x:Key="Status.SelectedGroup">Выбранная группа:</system:String>
+    <system:String x:Key="Status.SelectedItem">Выбранный элемент:</system:String>
+    <system:String x:Key="Status.SelectedItem.None">нет</system:String>
+	<system:String x:Key="Status.TotalItems">Всего элементов:</system:String>
     <system:String x:Key="Status.Endianness.Auto">Авто</system:String>
     <system:String x:Key="Status.Endianness.BigEndian">Big Endian</system:String>
     <system:String x:Key="Status.Endianness.LittleEndian">Little Endian</system:String>    

@@ -5,31 +5,21 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:common="clr-namespace:SA2MsgTextEditor.Common"
+        xmlns:behaviors="clr-namespace:SA2MsgTextEditor.UI.Behaviors"
         xmlns:converters="clr-namespace:SA2MsgTextEditor.UI.Converters"
         xmlns:uielements="clr-namespace:SA2MsgTextEditor.UI.Elements"
+        xmlns:vm="clr-namespace:SA2MsgTextEditor.VM"
+        d:DataContext="{d:DesignInstance Type=vm:AppViewModel}"
         mc:Ignorable="d"
-        Title="{DynamicResource MainWindow.Title}"
+        Title="{Binding Title}"
         Width="960" MinWidth="800"
         Height="720" MinHeight="600"
         WindowStartupLocation="CenterScreen"
         Loaded="WindowTextEditor_Loaded"
         Closing="WindowTextEditor_Closing">
     
-    <Window.Resources>
-        <Style TargetType="Button">
-            <Style.Resources>
-                <Style TargetType="Border">
-                    <Setter Property="CornerRadius" Value="2"/>
-                </Style>
-            </Style.Resources>
-
-            <Setter Property="FontSize" Value="14" />
-            <Setter Property="Height" Value="25" />
-            <Setter Property="BorderBrush" Value="DarkGray" />
-        </Style>
-    </Window.Resources>
-
     <Window.CommandBindings>
         <CommandBinding x:Name="CommandOpen" Command="Open" Executed="CommandOpen_Executed" />
         <CommandBinding x:Name="CommandSave" Command="Save" Executed="CommandSave_Executed" />
@@ -52,22 +42,27 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
+        <Grid.Resources>
+            <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
+            <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        </Grid.Resources>
+
         <!-- Menu -->
-            <Menu x:Name="Menu" Grid.Row="0" Height="25" VerticalAlignment="Top" FontSize="14">
+        <Menu Grid.Row="0" Height="25" VerticalAlignment="Top" FontSize="14">                        
             <MenuItem Header="{DynamicResource Menu.File}">
-                <MenuItem x:Name="MenuOpenFile" Header="{DynamicResource Menu.File.Open}" InputGestureText="Ctrl+O" Command="Open" />
+                <MenuItem Header="{DynamicResource Menu.File.Open}" InputGestureText="Ctrl+O" Command="Open" />
                 <Separator />
-                <MenuItem x:Name="MenuSave" Header="{DynamicResource Menu.File.Save}" InputGestureText="Ctrl+S" Command="Save" />
-                <MenuItem x:Name="MenuSaveAs" Header="{DynamicResource Menu.File.SaveAs}" InputGestureText="Ctrl+Shift+S" Command="SaveAs" />
+                <MenuItem Header="{DynamicResource Menu.File.Save}" IsEnabled="{Binding IsPRS}" InputGestureText="Ctrl+S" Command="Save" />
+                <MenuItem Header="{DynamicResource Menu.File.SaveAs}" IsEnabled="{Binding MessageFileLoaded}" InputGestureText="Ctrl+Shift+S" Command="SaveAs" />
                 <Separator />
                 <MenuItem x:Name="MenuImportJson" Header="{DynamicResource Menu.File.ImportJson}" Click="MenuImportJson_Click"/>
-                <MenuItem x:Name="MenuExportJson" Header="{DynamicResource Menu.File.ExportJson}" Click="MenuExportJson_Click" />
+                <MenuItem x:Name="MenuExportJson" Header="{DynamicResource Menu.File.ExportJson}" IsEnabled="{Binding MessageFileLoaded}" Click="MenuExportJson_Click" />
                 <Separator />
-                <MenuItem x:Name="MenuExit" Header="{DynamicResource Menu.File.Exit}" InputGestureText="Alt+F4" Command="Close" />
+                <MenuItem Header="{DynamicResource Menu.File.Exit}" InputGestureText="Alt+F4" Command="Close" />
             </MenuItem>
 
-            <MenuItem x:Name="MenuSearch" Header="{DynamicResource Menu.Search}">
-                <MenuItem x:Name="MenuFind" Header="{DynamicResource Menu.Search.Find}" InputGestureText="Ctrl+F" Command="Search" />
+            <MenuItem Header="{DynamicResource Menu.Search}" IsEnabled="{Binding MessageFileLoaded}">
+                <MenuItem Header="{DynamicResource Menu.Search.Find}" InputGestureText="Ctrl+F" Command="Search" />
             </MenuItem>
 
             <MenuItem Header="{DynamicResource Menu.Settings}">
@@ -78,7 +73,7 @@
                     <MenuItem x:Name="CodepageCustom" Header="{DynamicResource Menu.Codepage.Custom}" IsCheckable="True" Click="CodepageCustom_Click" />
                 </MenuItem>
                 <MenuItem Header="{DynamicResource Menu.Settings.Endianness}">
-                    <MenuItem x:Name="AutoEndian" Header="{DynamicResource Menu.Endianness.Auto}" IsCheckable="True" Click="AutoEndian_Click" />
+                    <MenuItem x:Name="AutoEndian" Header="{DynamicResource Menu.Endianness.Auto}" IsEnabled="{Binding MessageFileLoaded, Converter={StaticResource InverseBoolConverter}}" IsCheckable="True" Click="AutoEndian_Click" />
                     <MenuItem x:Name="BigEndian" Header="{DynamicResource Menu.Endianness.BigEndian}" IsCheckable="True" Click="BigEndian_Click" />
                     <MenuItem x:Name="LittleEndian" Header="{DynamicResource Menu.Endianness.LittleEndian}" IsCheckable="True" Click="LittleEndian_Click" />
                 </MenuItem>                
@@ -93,243 +88,355 @@
 
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition x:Name="GroupsList" Width="Auto" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition x:Name="GroupsList" Width="*" />
+                <ColumnDefinition Width="1.6*" />
             </Grid.ColumnDefinitions>
 
             <!-- Message groups (with multiple text blocks or grouped by piece for hunting stages) -->
-            <ListBox x:Name="ListGroupedMessages" Grid.Column="0" Width="320" Margin="10" HorizontalAlignment="Left" BorderBrush="LightGray" SelectionChanged="ListGroupedMessages_SelectionChanged">
-                <ListBox.Resources>
-                    <converters:GroupNamesConverter x:Key="GroupNamesConverter" />
+            <GroupBox Grid.Column="0" Margin="10" BorderBrush="LightGray"
+                      Visibility="{Binding MessageFileLoaded, Converter={StaticResource BoolToVisibilityConverter}}">
+                <GroupBox.Header>
+                    <TextBlock Text="{Binding MessageGroupsTitle}" FontWeight="DemiBold" />
+                </GroupBox.Header>
+                
+                <ListBox ItemsSource="{Binding MessageFile.MessageGroups}" SelectedItem="{Binding SelectedGroup}" SelectedIndex="{Binding SelectedGroupIndex}"
+                         Margin="10" BorderBrush="Transparent">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding AsString}" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
 
-                    <Style TargetType="Border">
-                        <Setter Property="CornerRadius" Value="3"/>
-                    </Style>
-                </ListBox.Resources>
-
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Converter={StaticResource GroupNamesConverter}}" />
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+                    <i:Interaction.Behaviors>
+                        <behaviors:ListBoxScrollIntoView />
+                    </i:Interaction.Behaviors>
+                </ListBox>
+            </GroupBox>            
 
             <!-- Messages list for selected group and buttons -->
-            <Grid Grid.Column="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition x:Name="Buttons" Height="Auto" />
-                </Grid.RowDefinitions>
+            <GroupBox Grid.Column="1" BorderBrush="LightGray" Margin="10"
+                      Visibility="{Binding AnyGroupIsSelected, Converter={StaticResource BoolToVisibilityConverter}}">
+                <GroupBox.Header>
+                    <TextBlock Text="{Binding MessageListTitle}" FontWeight="DemiBold" />
+                </GroupBox.Header>
 
-                <!-- Message list -->
-                <DataGrid x:Name="MessagesList" Grid.Row="0" FontSize="14" Margin="10" VerticalAlignment="Top" AutoGenerateColumns="False" CanUserAddRows="False" HeadersVisibility="Column"
-                          BorderBrush="LightGray" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray" SelectionChanged="MessagesList_SelectionChanged">
+                <GroupBox.Resources>
+                    <Style TargetType="Button">
+                        <Style.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="2"/>
+                            </Style>
+                        </Style.Resources>
 
-                    <DataGrid.Resources>
-                        <converters:TextCenteringNameConverter x:Key="TextCenteringNameConverter" />
-                        <converters:TextCenteringDescriptionConverter x:Key="TextCenteringDescriptionConverter" />
+                        <Setter Property="FontSize" Value="14" />
+                        <Setter Property="Height" Value="25" />
+                        <Setter Property="BorderBrush" Value="DarkGray" />
+                    </Style>
+                </GroupBox.Resources>
 
-                        <ObjectDataProvider x:Key="TextCenteringEnumValues" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
-                            <ObjectDataProvider.MethodParameters>
-                                <x:Type TypeName="common:TextCentering" />
-                            </ObjectDataProvider.MethodParameters>
-                        </ObjectDataProvider>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition x:Name="Buttons" Height="Auto" />
+                    </Grid.RowDefinitions>
 
-                        <Style TargetType="Border">
-                            <Setter Property="CornerRadius" Value="3" />
-                        </Style>
-                        <Style x:Key="CenteredHeader" TargetType="{x:Type DataGridColumnHeader}">
-                            <Setter Property="HorizontalContentAlignment" Value="Center" />
-                        </Style>
-                        <Style x:Key="NumericTextAlignment" TargetType="TextBlock">
-                            <Setter Property="HorizontalAlignment" Value="Center" />
-                            <Setter Property="VerticalAlignment" Value="Center" />
-                        </Style>
-                        <Style x:Key="NumericBoxAlignment" TargetType="TextBox">
-                            <Setter Property="HorizontalContentAlignment" Value="Center" />
-                            <Setter Property="VerticalContentAlignment" Value="Center" />
-                        </Style>
-                        <Style x:Key="ComboBoxAlignment" TargetType="ComboBox">
-                            <Setter Property="HorizontalAlignment" Value="Center" />
-                            <Setter Property="VerticalAlignment" Value="Center" />
-                        </Style>
-                        <Style x:Key="CheckBoxAlignment" TargetType="CheckBox">
-                            <Setter Property="HorizontalAlignment" Value="Center" />
-                            <Setter Property="VerticalAlignment" Value="Center" />
-                        </Style>
-                        <Style x:Key="TextBoxAlignment" TargetType="TextBlock">
-                            <Setter Property="VerticalAlignment" Value="Center" />
-                        </Style>
-                        <Style x:Key="AcceptLineBreak" TargetType="TextBox">
-                            <Setter Property="AcceptsReturn" Value="True" />
-                        </Style>
-                    </DataGrid.Resources>
+                    <!-- Message list -->
+                    <FrameworkElement x:Name="Proxy" Visibility="Collapsed" />
+                    <DataGrid Grid.Row="0" ItemsSource="{Binding SelectedGroup.Group}" SelectedIndex="{Binding SelectedMessageIndex}"
+                              FontSize="14" Margin="10" VerticalAlignment="Top" AutoGenerateColumns="False" CanUserAddRows="False" HeadersVisibility="Column"
+                              BorderBrush="LightGray" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray">
 
-                    <DataGrid.RowStyle>
-                        <Style TargetType="DataGridRow">
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="LightGray" />
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </DataGrid.RowStyle>
+                        <DataGrid.Resources>
+                            <converters:TextCenteringNameConverter x:Key="TextCenteringNameConverter" />
+                            <converters:TextCenteringDescriptionConverter x:Key="TextCenteringDescriptionConverter" />
 
-                    <DataGrid.CellStyle>
-                        <Style TargetType="DataGridCell">
-                            <Style.Triggers>
-                                <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Background" Value="DodgerBlue" />
-                                    <Setter Property="BorderBrush" Value="SteelBlue" />
-                                    <Setter Property="Foreground" Value="White" />
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </DataGrid.CellStyle>
+                            <ObjectDataProvider x:Key="TextCenteringEnumValues" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
+                                <ObjectDataProvider.MethodParameters>
+                                    <x:Type TypeName="common:TextCentering" />
+                                </ObjectDataProvider.MethodParameters>
+                            </ObjectDataProvider>
 
-                    <DataGrid.Columns>
-                        <!-- Voice -->
-                        <uielements:DataGridNumericColumn
-                            x:Name="ColumnVoice" MinWidth="50" CanUserSort="False"
-                            HeaderStyle="{StaticResource CenteredHeader}"
-                            Binding="{Binding Voice, UpdateSourceTrigger=PropertyChanged}"
-                            ElementStyle="{StaticResource NumericTextAlignment}"
-                            EditingElementStyle="{StaticResource NumericBoxAlignment}">
-                            <uielements:DataGridNumericColumn.Header>
-                                <TextBlock Text="{DynamicResource SA2Message.Voice}" ToolTip="{DynamicResource SA2Message.Voice.Description}" />
-                            </uielements:DataGridNumericColumn.Header>
-                        </uielements:DataGridNumericColumn>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="3" />
+                            </Style>
 
-                        <!-- Frame count -->
-                        <uielements:DataGridNumericColumn
-                            x:Name="ColumnFrameCount" MinWidth="50" CanUserSort="False"
-                            HeaderStyle="{StaticResource CenteredHeader}"
-                            Binding="{Binding FrameCount, UpdateSourceTrigger=PropertyChanged}"
-                            ElementStyle="{StaticResource NumericTextAlignment}"
-                            EditingElementStyle="{StaticResource NumericBoxAlignment}">
-                            <uielements:DataGridNumericColumn.Header>
-                                <TextBlock Text="{DynamicResource SA2Message.FrameCount}" ToolTip="{DynamicResource SA2Message.FrameCount.Description}" />
-                            </uielements:DataGridNumericColumn.Header>
-                        </uielements:DataGridNumericColumn>
+                            <Style x:Key="CenteredHeader" TargetType="{x:Type DataGridColumnHeader}">
+                                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                            </Style>
 
-                        <!-- Is 2P piece -->
-                        <DataGridCheckBoxColumn
-                            x:Name="ColumnIs2P" MinWidth="20" CanUserSort="False"
-                            HeaderStyle="{StaticResource CenteredHeader}"
-                            Binding="{Binding Is2PPiece, UpdateSourceTrigger=PropertyChanged}"
-                            ElementStyle="{StaticResource CheckBoxAlignment}">
-                            <DataGridCheckBoxColumn.Header>
-                                <TextBlock Text="{DynamicResource SA2Message.Is2P}" ToolTip="{DynamicResource SA2Message.Is2P.Description}" />
-                            </DataGridCheckBoxColumn.Header>
-                        </DataGridCheckBoxColumn>
+                            <Style x:Key="NumericTextAlignment" TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center" />
+                                <Setter Property="VerticalAlignment" Value="Center" />
+                            </Style>
 
-                        <!-- Text centering -->
-                        <DataGridTemplateColumn
-                            x:Name="ColumnTextCentering" MinWidth="50" MaxWidth="150" CanUserSort="False" HeaderStyle="{StaticResource CenteredHeader}" >
-                            <DataGridTemplateColumn.Header>
-                                <TextBlock Text="{DynamicResource SA2Message.TextCentering}" ToolTip="{DynamicResource SA2Message.TextCentering.Description}" />
-                            </DataGridTemplateColumn.Header>
+                            <Style x:Key="NumericBoxAlignment" TargetType="TextBox">
+                                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                <Setter Property="VerticalContentAlignment" Value="Center" />
+                            </Style>
 
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock
-                                        Padding="5" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                        Text="{Binding TextCentering, Converter={StaticResource TextCenteringNameConverter}}"
-                                        ToolTip="{Binding TextCentering, Converter={StaticResource TextCenteringDescriptionConverter}}" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
+                            <Style x:Key="ComboBoxAlignment" TargetType="ComboBox">
+                                <Setter Property="HorizontalAlignment" Value="Center" />
+                                <Setter Property="VerticalAlignment" Value="Center" />
+                            </Style>
 
-                            <DataGridTemplateColumn.CellEditingTemplate>
-                                <DataTemplate>
-                                    <ComboBox
-                                        Padding="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"                
-                                        ItemsSource="{Binding Source={StaticResource TextCenteringEnumValues}, Mode=OneWay}"                
-                                        SelectedItem="{Binding TextCentering, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
-                                        <ComboBox.ItemTemplate>
-                                            <DataTemplate>
-                                                <TextBlock
-                                                    HorizontalAlignment="Center" VerticalAlignment="Center"    
-                                                    Text="{Binding Converter={StaticResource TextCenteringNameConverter}}"    
-                                                    ToolTip="{Binding Converter={StaticResource TextCenteringDescriptionConverter}}" />
-                                            </DataTemplate>
-                                        </ComboBox.ItemTemplate>
-                                    </ComboBox>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellEditingTemplate>
-                        </DataGridTemplateColumn>
+                            <Style x:Key="CheckBoxStyle" TargetType="CheckBox">
+                                <Setter Property="HorizontalAlignment" Value="Center" />
+                                <Setter Property="VerticalAlignment" Value="Center" />
+                                <Setter Property="BorderBrush" Value="DarkGray" />
+                                <Style.Resources>
+                                    <Style TargetType="Border">
+                                        <Setter Property="CornerRadius" Value="2" />
+                                    </Style>
+                                </Style.Resources>
+                            </Style>
 
-                        <!-- Text -->
-                        <DataGridTextColumn
-                            x:Name="ColumnText" Width="*" MinWidth="320" CanUserSort="False"
-                            Binding="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
-                            ElementStyle="{StaticResource TextBoxAlignment}" EditingElementStyle="{StaticResource AcceptLineBreak}">
-                            <DataGridTextColumn.Header>
-                                <TextBlock Text="{DynamicResource SA2Message.Text}" ToolTip="{DynamicResource SA2Message.Text.Description}" />
-                            </DataGridTextColumn.Header>
-                        </DataGridTextColumn>
+                            <Style x:Key="TextBoxAlignment" TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center" />
+                            </Style>
 
-                        <!-- Chao names -->
-						<uielements:DataGridLimitedTextLengthColumn
-                            x:Name="ColumnChaoNames" Width="*" MinWidth="320" CanUserSort="False" Visibility="Hidden"
-                            Binding="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
-                            ElementStyle="{StaticResource TextBoxAlignment}">
-                            <uielements:DataGridLimitedTextLengthColumn.Header>
-                                <TextBlock Text="{DynamicResource SA2Message.ChaoNames}" ToolTip="{DynamicResource SA2Message.ChaoNames.Description}" />
-                            </uielements:DataGridLimitedTextLengthColumn.Header>
-                        </uielements:DataGridLimitedTextLengthColumn>
-                    </DataGrid.Columns>
-                </DataGrid>
+                            <Style x:Key="AcceptLineBreak" TargetType="TextBox">
+                                <Setter Property="AcceptsReturn" Value="True" />
+                            </Style>
+                        </DataGrid.Resources>
 
-                <!-- Buttons -->
-                <Grid Grid.Row="1" Margin="10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="LightGray" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.RowStyle>
 
-                    <StackPanel Grid.Column="0" Orientation="Vertical" HorizontalAlignment="Right">
-                        <Button x:Name="ButtonAdd" Content="{DynamicResource Button.Add}" Click="ButtonAdd_Click" />
-                        <Button x:Name="ButtonInsertAfter" Content="{DynamicResource Button.InsertAfter}" Margin="0,15,0,0" IsEnabled="False" Click="ButtonInsertAfter_Click" />
-                    </StackPanel>
-                    <StackPanel Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Right" Margin="15,0,0,0">
-                        <Button x:Name="ButtonRemoveLast" Content="{DynamicResource Button.RemoveLast}" Click="ButtonRemoveLast_Click" />
-                        <Button x:Name="ButtonRemoveSelected" Content="{DynamicResource Button.RemoveSelected}" Margin="0,15,0,0" IsEnabled="False" Click="ButtonRemoveSelected_Click" />
-                    </StackPanel>
+                        <DataGrid.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Style.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Background" Value="DodgerBlue" />
+                                        <Setter Property="BorderBrush" Value="SteelBlue" />
+                                        <Setter Property="Foreground" Value="White" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.CellStyle>
+
+                        <i:Interaction.Behaviors>
+                            <behaviors:DataGridScrollIntoView />
+                        </i:Interaction.Behaviors>
+
+                        <DataGrid.Columns>
+                            <!-- Voice -->
+                            <uielements:DataGridNumericColumn MinWidth="50" CanUserSort="False"
+                                                              HeaderStyle="{StaticResource CenteredHeader}"
+                                                              Binding="{Binding Voice, UpdateSourceTrigger=PropertyChanged}"
+                                                              ElementStyle="{StaticResource NumericTextAlignment}"
+                                                              EditingElementStyle="{StaticResource NumericBoxAlignment}"
+                                                              Visibility="{Binding DataContext.IsGameplayFile, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Reference Proxy}}">
+                                <uielements:DataGridNumericColumn.Header>
+                                    <TextBlock Text="{DynamicResource SA2Message.Voice}" ToolTip="{DynamicResource SA2Message.Voice.Description}" FontWeight="DemiBold" />
+                                </uielements:DataGridNumericColumn.Header>
+                            </uielements:DataGridNumericColumn>
+
+                            <!-- Frame count -->
+                            <uielements:DataGridNumericColumn MinWidth="50" CanUserSort="False"
+                                                              HeaderStyle="{StaticResource CenteredHeader}"
+                                                              Binding="{Binding FrameCount, UpdateSourceTrigger=PropertyChanged}"
+                                                              ElementStyle="{StaticResource NumericTextAlignment}"
+                                                              EditingElementStyle="{StaticResource NumericBoxAlignment}"
+                                                              Visibility="{Binding DataContext.IsGameplayFile, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Reference Proxy}}">
+                                <uielements:DataGridNumericColumn.Header>
+                                    <TextBlock Text="{DynamicResource SA2Message.FrameCount}" ToolTip="{DynamicResource SA2Message.FrameCount.Description}" FontWeight="DemiBold" />
+                                </uielements:DataGridNumericColumn.Header>
+                            </uielements:DataGridNumericColumn>
+
+                            <!-- Is 2P piece -->
+                            <DataGridCheckBoxColumn MinWidth="20" CanUserSort="False"
+                                                    HeaderStyle="{StaticResource CenteredHeader}"
+                                                    Binding="{Binding Is2PPiece, UpdateSourceTrigger=PropertyChanged}"
+                                                    ElementStyle="{StaticResource CheckBoxStyle}"
+                                                    Visibility="{Binding DataContext.IsHuntingFile, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Reference Proxy}}">
+                                <DataGridCheckBoxColumn.Header>
+                                    <TextBlock Text="{DynamicResource SA2Message.Is2P}" ToolTip="{DynamicResource SA2Message.Is2P.Description}" FontWeight="DemiBold" />
+                                </DataGridCheckBoxColumn.Header>
+                            </DataGridCheckBoxColumn>
+
+                            <!-- Text centering -->
+                            <DataGridTemplateColumn MinWidth="50" MaxWidth="150" CanUserSort="False"
+                                                    HeaderStyle="{StaticResource CenteredHeader}"
+                                                    Visibility="{Binding DataContext.IsNotChaoNamesFile, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Reference Proxy}}">
+                                <DataGridTemplateColumn.Header>
+                                    <TextBlock Text="{DynamicResource SA2Message.TextCentering}" ToolTip="{DynamicResource SA2Message.TextCentering.Description}" FontWeight="DemiBold" />
+                                </DataGridTemplateColumn.Header>
+
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Padding="5" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                   Text="{Binding TextCentering, Converter={StaticResource TextCenteringNameConverter}}"
+                                                   ToolTip="{Binding TextCentering, Converter={StaticResource TextCenteringDescriptionConverter}}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+
+                                <DataGridTemplateColumn.CellEditingTemplate>
+                                    <DataTemplate>
+                                        <ComboBox Padding="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                                  ItemsSource="{Binding Source={StaticResource TextCenteringEnumValues}, Mode=OneWay}"
+                                                  SelectedItem="{Binding TextCentering, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                                            <ComboBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                               Text="{Binding Converter={StaticResource TextCenteringNameConverter}}"
+                                                               ToolTip="{Binding Converter={StaticResource TextCenteringDescriptionConverter}}" />
+                                                </DataTemplate>
+                                            </ComboBox.ItemTemplate>
+                                        </ComboBox>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellEditingTemplate>
+                            </DataGridTemplateColumn>
+
+                            <!-- Text -->
+                            <DataGridTextColumn Width="*" MinWidth="320" CanUserSort="False"
+                                                Binding="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
+                                                ElementStyle="{StaticResource TextBoxAlignment}"
+                                                EditingElementStyle="{StaticResource AcceptLineBreak}"
+                                                Visibility="{Binding DataContext.IsNotChaoNamesFile, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Reference Proxy}}">
+                                <DataGridTextColumn.Header>
+                                    <TextBlock Text="{DynamicResource SA2Message.Text}" ToolTip="{DynamicResource SA2Message.Text.Description}" FontWeight="DemiBold" />
+                                </DataGridTextColumn.Header>
+                            </DataGridTextColumn>
+
+                            <!-- Chao names -->
+                            <uielements:DataGridLimitedTextLengthColumn Width="*" MinWidth="320" CanUserSort="False"
+                                                                        Binding="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
+                                                                        ElementStyle="{StaticResource TextBoxAlignment}"
+                                                                        Visibility="{Binding DataContext.IsChaoNamesFile, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Reference Proxy}}">
+                                <uielements:DataGridLimitedTextLengthColumn.Header>
+                                    <TextBlock Text="{DynamicResource SA2Message.ChaoNames}" ToolTip="{DynamicResource SA2Message.ChaoNames.Description}" FontWeight="DemiBold" />
+                                </uielements:DataGridLimitedTextLengthColumn.Header>
+                            </uielements:DataGridLimitedTextLengthColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <!-- Buttons -->
+                    <Grid Grid.Row="1" Margin="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" Orientation="Vertical" HorizontalAlignment="Right">
+                            <Button x:Name="ButtonAdd" Click="ButtonAdd_Click"
+                                    Content="{DynamicResource Button.Add}"
+                                    Visibility="{Binding AnyGroupIsSelected, Converter={StaticResource BoolToVisibilityConverter}}" />
+                            <Button x:Name="ButtonInsertAfter" Margin="0,15,0,0" Click="ButtonInsertAfter_Click"
+                                    Content="{DynamicResource Button.InsertAfter}"
+                                    Visibility="{Binding AnyGroupIsSelected, Converter={StaticResource BoolToVisibilityConverter}}"
+                                    IsEnabled="{Binding AnyMessageIsSelected}" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Right" Margin="15,0,0,0">
+                            <Button x:Name="ButtonRemoveLast" Click="ButtonRemoveLast_Click"
+                                    Content="{DynamicResource Button.RemoveLast}"
+                                    Visibility="{Binding AnyGroupIsSelected, Converter={StaticResource BoolToVisibilityConverter}}" />
+                            <Button x:Name="ButtonRemoveSelected" Margin="0,15,0,0" Click="ButtonRemoveSelected_Click"
+                                    Content="{DynamicResource Button.RemoveSelected}"
+                                    Visibility="{Binding AnyGroupIsSelected, Converter={StaticResource BoolToVisibilityConverter}}"
+                                    IsEnabled="{Binding AnyMessageIsSelected}" />
+                        </StackPanel>
+                    </Grid>
                 </Grid>
-            </Grid>
+            </GroupBox>
         </Grid>
 
         <!-- Status bar -->
         <StatusBar Grid.Row="2" Height="25" BorderBrush="LightGray" BorderThickness="1">
+            <StatusBar.Resources>
+                <Style x:Key="StatusBarSeparator" TargetType="Separator">
+                    <Setter Property="BorderBrush" Value="DarkGray" />
+                    <Setter Property="BorderThickness" Value="1" />
+                    <Setter Property="Margin" Value="2" />
+                    <Setter Property="LayoutTransform">
+                        <Setter.Value>
+                            <RotateTransform Angle="90" />
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </StatusBar.Resources>
+
+            <StatusBar.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                    </Grid>
+                </ItemsPanelTemplate>
+            </StatusBar.ItemsPanel>
+
+            <!-- File type -->
+            <StatusBarItem Grid.Column="0">
+                <TextBlock Text="{Binding FileTypeAsString}" />
+            </StatusBarItem>
+            
+            <!-- Selected group -->
+            <StatusBarItem Grid.Column="1" Visibility="{Binding IsHuntingOrGameplayFile, Converter={StaticResource BoolToVisibilityConverter}}" Padding="0">
+                <StackPanel Orientation="Horizontal">
+                    <Separator Style="{StaticResource StatusBarSeparator}" />
+                    
+                    <StatusBarItem>
+                        <TextBlock Text="{DynamicResource Status.SelectedGroup}" />
+                    </StatusBarItem>
+                    <StatusBarItem>
+                        <TextBlock Text="{Binding SelectedGroupIndexAsString, FallbackValue='none'}" />
+                    </StatusBarItem>
+                </StackPanel>
+            </StatusBarItem>
+
+            <!-- Selected item + total items -->
+            <StatusBarItem Grid.Column="2" Visibility="{Binding AnyGroupIsSelected, Converter={StaticResource BoolToVisibilityConverter}}" Padding="0">
+                <StackPanel Orientation="Horizontal">
+                    <Separator Style="{StaticResource StatusBarSeparator}" />
+
+                    <!-- Selected item -->
+                    <StatusBarItem>
+                        <TextBlock Text="{DynamicResource Status.SelectedItem}" />
+                    </StatusBarItem>
+                    <StatusBarItem>
+                        <TextBlock Text="{Binding SelectedMessageIndexAsString, FallbackValue='none'}" />
+                    </StatusBarItem>
+
+                    <Separator Style="{StaticResource StatusBarSeparator}" />
+
+                    <!-- Total items -->
+                    <StatusBarItem>
+                        <TextBlock Text="{DynamicResource Status.TotalItems}" />
+                    </StatusBarItem>
+                    <StatusBarItem>
+                        <TextBlock Text="{Binding SelectedGroup.Group.Count, FallbackValue=0}" />
+                    </StatusBarItem>
+                </StackPanel>
+            </StatusBarItem>
 
             <!-- Config items -->
-            <StatusBarItem DockPanel.Dock="Right">
-                <TextBlock x:Name="StatusEncoding" />
-            </StatusBarItem>
-            <Separator BorderBrush="LightGray" BorderThickness="1" DockPanel.Dock="Right" />
-            <StatusBarItem DockPanel.Dock="Right">
-                <TextBlock x:Name="StatusEndianness" />
-            </StatusBarItem>
-            <Separator BorderBrush="LightGray" BorderThickness="1" DockPanel.Dock="Right" />
+            <StatusBarItem Grid.Column="3" Padding="0">
+                <StackPanel Orientation="Horizontal">
+                    <Separator Style="{StaticResource StatusBarSeparator}" />
 
-            <!-- Details -->
-            <StatusBarItem DockPanel.Dock="Right">
-                <TextBlock x:Name="StatusTotalItems" />
-            </StatusBarItem>
-            <Separator x:Name="StatusSeparator1" BorderBrush="LightGray" BorderThickness="1" DockPanel.Dock="Right" />
-            <StatusBarItem DockPanel.Dock="Right">
-                <TextBlock x:Name="StatusSelectedItem" />
-            </StatusBarItem>
-            <Separator x:Name="StatusSeparator2" BorderBrush="LightGray" BorderThickness="1" DockPanel.Dock="Right" />
-            <StatusBarItem DockPanel.Dock="Right">
-                <TextBlock x:Name="StatusSelectedGroup" />
-            </StatusBarItem>
-            <Separator x:Name="StatusSeparator3" BorderBrush="LightGray" BorderThickness="1" DockPanel.Dock="Right" />
+                    <!-- Endianness -->
+                    <StatusBarItem>
+                        <TextBlock Text="{Binding EndiannessAsString}" ToolTip="{DynamicResource Menu.Settings.Endianness}" />
+                    </StatusBarItem>
 
-            <!-- Message file type -->
-            <StatusBarItem>
-                <TextBlock x:Name="StatusFileType" />
+                    <Separator Style="{StaticResource StatusBarSeparator}" />
+
+                    <!-- Encoding -->
+                    <StatusBarItem>
+                        <TextBlock Text="{Binding EncodingAsString}" ToolTip="{DynamicResource Menu.Settings.Codepage}" />
+                    </StatusBarItem>
+                </StackPanel>
             </StatusBarItem>
         </StatusBar>
     </Grid>
