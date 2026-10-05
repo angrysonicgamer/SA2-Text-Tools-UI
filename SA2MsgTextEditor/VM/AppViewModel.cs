@@ -185,7 +185,7 @@ namespace SA2MsgTextEditor.VM
 
         public void SaveMessageFile()
         {
-            if (FileName == null) return;
+            if (FileName == null || FileMode != OpenFileMode.OpenPRS) return;
             
             MessageFile?.Save(FileName, SelectedEncoding, SelectedEndianness);
         }

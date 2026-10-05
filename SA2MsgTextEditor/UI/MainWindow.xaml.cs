@@ -181,6 +181,8 @@ namespace SA2MsgTextEditor.UI
 
         private void CommandSaveAs_Executed(object sender, ExecutedRoutedEventArgs e)
         {
+            if (App.VM.MessageFile == null) return;
+            
             if (App.VM.FileMode == OpenFileMode.ImportJSON && App.Config.Settings.Endianness == Endianness.Auto)
             {
                 MessageBox.Show(App.GetString("Message.AutoEndiannessSaveAs"), App.GetString("App.Title"), MessageBoxButton.OK, MessageBoxImage.Warning);

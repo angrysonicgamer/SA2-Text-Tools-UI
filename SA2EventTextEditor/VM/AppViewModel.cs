@@ -149,7 +149,7 @@ namespace SA2EventTextEditor.VM
 
         public void SaveEventFile()
         {
-            if (FileName == null) return;
+            if (FileName == null || FileMode != OpenFileMode.OpenPRS) return;
 
             EventFile?.Save(FileName, SelectedEncoding, SelectedEndianness);
         }
