@@ -16,7 +16,7 @@ namespace SA2EventTextEditor
 
         public static string GetString(string key)
         {
-            var res = Current.TryFindResource(key).ToString();
+            var res = Current.TryFindResource(key);
 
             if (res is string str)
             {
