@@ -8,6 +8,14 @@ namespace SA2MsgTextEditor.JSON
 {
     public class Json
     {
+        private static readonly JsonSerializerOptions _serializerOptions = new()
+        {
+            WriteIndented = true,
+            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault
+        };
+
+
         public static T? Import<T>(string fileName)
         {
             var json = JsonNode.Parse(File.ReadAllText(fileName));
@@ -16,14 +24,7 @@ namespace SA2MsgTextEditor.JSON
 
         public static void Export<T>(T contents, string fileName)
         {
-            var options = new JsonSerializerOptions()
-            {
-                WriteIndented = true,
-                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-            };
-
-            var json = JsonSerializer.Serialize(contents, options);
+            var json = JsonSerializer.Serialize(contents, _serializerOptions);
             File.WriteAllText(fileName, json);
         }
     }
