@@ -253,7 +253,7 @@
                             <!-- Is 2P piece -->
                             <DataGridCheckBoxColumn MinWidth="20" CanUserSort="False"
                                                     HeaderStyle="{StaticResource CenteredHeader}"
-                                                    Binding="{Binding Is2PPiece, UpdateSourceTrigger=PropertyChanged}"
+                                                    Binding="{Binding Is2P, UpdateSourceTrigger=PropertyChanged}"
                                                     ElementStyle="{StaticResource CheckBoxStyle}"
                                                     Visibility="{Binding DataContext.IsHuntingFile, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Reference Proxy}}">
                                 <DataGridCheckBoxColumn.Header>
