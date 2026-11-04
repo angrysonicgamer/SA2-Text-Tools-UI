@@ -25,16 +25,27 @@ namespace SA2MsgTextEditor.Config
             if (File.Exists(_configFile))
             {
                 var buffer = Json.Import<AppConfig>(_configFile);
-                Settings.Encoding = buffer.Settings.Encoding;
-                Settings.CustomCodepage = buffer.Settings.CustomCodepage;
-                Settings.Endianness = buffer.Settings.Endianness;
-                Settings.Language = buffer.Settings.Language;
-                Search.IgnoreCase = buffer.Search.IgnoreCase;
+
+                if (buffer?.Settings != null)
+                {
+                    Settings.Encoding = buffer.Settings.Encoding;
+                    Settings.CustomCodepage = buffer.Settings.CustomCodepage;
+                    Settings.Endianness = buffer.Settings.Endianness;
+                    Settings.Language = buffer.Settings.Language;
+                }
+                else
+                {
+                    Settings.Encoding = Codepage.Windows1252;
+                    Settings.Endianness = Endianness.Auto;
+                    Settings.Language = Language.English;
+                }
+                
+                Search.IgnoreCase = buffer?.Search != null && buffer.Search.IgnoreCase;
             }
             else
             {
                 Settings.Encoding = Codepage.Windows1252;
-                Settings.Endianness = Endianness.BigEndian;
+                Settings.Endianness = Endianness.Auto;
                 Settings.Language = Language.English;
                 Search.IgnoreCase = false;
             }

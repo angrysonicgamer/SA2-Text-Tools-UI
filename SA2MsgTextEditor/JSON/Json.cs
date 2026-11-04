@@ -19,7 +19,7 @@ namespace SA2MsgTextEditor.JSON
         public static T? Import<T>(string fileName)
         {
             var json = JsonNode.Parse(File.ReadAllText(fileName));
-            return JsonSerializer.Deserialize<T>(json);
+            return JsonSerializer.Deserialize<T>(json, _serializerOptions);
         }
 
         public static void Export<T>(T contents, string fileName)
