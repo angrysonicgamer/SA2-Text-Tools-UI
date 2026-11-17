@@ -125,6 +125,11 @@ namespace SA2MsgTextEditor.VM
             SelectedEndianness = App.Config.Settings.Endianness;
         }
 
+        public void UpdataSelectedGroup()
+        {
+            SelectedGroup?.NotifyPropertyChanged(nameof(SelectedGroup.AsString));
+        }
+
         public void UpdateLanguage()
         {
             NotifyPropertyChanged(nameof(Title), nameof(FileTypeAsString), nameof(EncodingAsString), nameof(EndiannessAsString),
@@ -214,7 +219,7 @@ namespace SA2MsgTextEditor.VM
             }
         }
 
-        #endregion
+        #endregion        
 
         #region Add/remove items
 

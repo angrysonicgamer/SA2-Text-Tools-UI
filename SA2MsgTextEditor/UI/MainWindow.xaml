@@ -193,10 +193,6 @@
                             <Style x:Key="TextBoxAlignment" TargetType="TextBlock">
                                 <Setter Property="VerticalAlignment" Value="Center" />
                             </Style>
-
-                            <Style x:Key="AcceptLineBreak" TargetType="TextBox">
-                                <Setter Property="AcceptsReturn" Value="True" />
-                            </Style>
                         </DataGrid.Resources>
 
                         <DataGrid.RowStyle>
@@ -295,15 +291,23 @@
                             </DataGridTemplateColumn>
 
                             <!-- Text -->
-                            <DataGridTextColumn Width="*" MinWidth="320" CanUserSort="False"
-                                                Binding="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
-                                                ElementStyle="{StaticResource TextBoxAlignment}"
-                                                EditingElementStyle="{StaticResource AcceptLineBreak}"
-                                                Visibility="{Binding DataContext.IsNotChaoNamesFile, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Reference Proxy}}">
-                                <DataGridTextColumn.Header>
+                            <DataGridTemplateColumn Width="*" MinWidth="320" CanUserSort="False"
+                                                    Visibility="{Binding DataContext.IsNotChaoNamesFile, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Reference Proxy}}">
+                                <DataGridTemplateColumn.Header>
                                     <TextBlock Text="{DynamicResource SA2Message.Text}" ToolTip="{DynamicResource SA2Message.Text.Description}" FontWeight="DemiBold" />
-                                </DataGridTextColumn.Header>
-                            </DataGridTextColumn>
+                                </DataGridTemplateColumn.Header>
+                                
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}" FontSize="14" VerticalAlignment="Center" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                                <DataGridTemplateColumn.CellEditingTemplate>
+                                    <DataTemplate>
+                                        <TextBox x:Name="TextEdit" Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}" FontSize="14" AcceptsReturn="True" LostFocus="TextEdit_LostFocus" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellEditingTemplate>
+                            </DataGridTemplateColumn>
 
                             <!-- Chao names -->
                             <uielements:DataGridLimitedTextLengthColumn Width="*" MinWidth="320" CanUserSort="False"

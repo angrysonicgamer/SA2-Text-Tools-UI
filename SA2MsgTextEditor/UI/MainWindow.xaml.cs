@@ -38,6 +38,11 @@ namespace SA2MsgTextEditor.UI
             }
         }
 
+        private void TextEdit_LostFocus(object sender, RoutedEventArgs e)
+        {
+            App.VM.UpdataSelectedGroup();
+        }
+
 
         #region Setting up the view
 
@@ -420,6 +425,6 @@ namespace SA2MsgTextEditor.UI
             App.VM.RemoveSelectedMessage();
         }
 
-        #endregion
+        #endregion        
     }
 }
