@@ -230,7 +230,9 @@ namespace SA2MsgTextEditor.VM
 
         public void RemoveLastMessage()
         {
-            SelectedGroup?.Group.RemoveAt(SelectedGroup.Group.Count - 1);
+            if (SelectedGroup == null || SelectedGroup.Group.Count == 0) return;
+
+            SelectedGroup.Group.RemoveAt(SelectedGroup.Group.Count - 1);
         }
 
         public void InsertMessage()

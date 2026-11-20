@@ -192,6 +192,8 @@ namespace SA2EventTextEditor.VM
 
         public void RemoveLastMessage()
         {
+            if (SelectedScene == null || SelectedScene.Messages.Count == 0) return;
+
             SelectedScene?.Messages.RemoveAt(SelectedScene.Messages.Count - 1);
         }
 

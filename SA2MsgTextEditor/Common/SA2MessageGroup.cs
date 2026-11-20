@@ -5,12 +5,12 @@ namespace SA2MsgTextEditor.Common
 {
     public class SA2MessageGroup : PropertyChangedNotifier
     {
-        private ObservableCollection<SA2Message> _value;
+        private ObservableCollection<SA2Message> group;
 
         public ObservableCollection<SA2Message> Group
         {
-            get => _value;
-            set { _value = value; NotifyPropertyChanged(nameof(Group), nameof(AsString)); }
+            get => group;
+            set { group = value; NotifyPropertyChanged(nameof(Group), nameof(AsString)); }
         }
 
         [JsonIgnore]
